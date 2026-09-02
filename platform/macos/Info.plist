@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
-<dict>
-	<key>BuildMachineOSBuild</key>
-	<string>19B88</string>
-	<key>CFBundleDevelopmentRegion</key>
-	<string>English</string>
-  <!-- TODO: due to love2d interpreting any files it opens with as .love files,
+  <dict>
+    <key>BuildMachineOSBuild</key>
+    <string>19B88</string>
+    <key>CFBundleDevelopmentRegion</key>
+    <string>English</string>
+    <!-- TODO: due to love2d interpreting any files it opens with as .love files,
   presently, trying to open trackmaker with an .xdrv causes it to crash.
   the file association works fine, but i'd rather remove this to prevent people
   from attempting to open .xdrv files with trackmaker and getting the crash -->
-	<!--<key>CFBundleDocumentTypes</key>
+    <!--<key>CFBundleDocumentTypes</key>
 	<array>
 		<dict>
 			<key>CFBundleTypeExtensions</key>
@@ -33,78 +33,78 @@
 			<integer>0</integer>
 		</dict>
 	</array>-->
-	<key>CFBundleExecutable</key>
-	<string>trackmaker</string>
-	<key>CFBundleIconFile</key>
-	<string>OS X AppIcon</string>
-	<key>CFBundleIconName</key>
-	<string>OS X AppIcon</string>
-	<key>CFBundleIdentifier</key>
-	<string>zone.oat.trackmaker</string>
-	<key>CFBundleInfoDictionaryVersion</key>
-	<string>6.0</string>
-	<key>CFBundleName</key>
-	<string>trackmaker</string>
-	<key>CFBundlePackageType</key>
-	<string>APPL</string>
-	<key>CFBundleShortVersionString</key>
-	<string>{VERSION}</string>
-	<key>CFBundleSignature</key>
-	<string>LoVe</string>
-	<key>CFBundleSupportedPlatforms</key>
-	<array>
-		<string>MacOSX</string>
-	</array>
-	<key>DTCompiler</key>
-	<string>com.apple.compilers.llvm.clang.1_0</string>
-	<key>DTPlatformBuild</key>
-	<string>11C504</string>
-	<key>DTPlatformVersion</key>
-	<string>GM</string>
-	<key>DTSDKBuild</key>
-	<string>19B90</string>
-	<key>DTSDKName</key>
-	<string>macosx10.15</string>
-	<key>DTXcode</key>
-	<string>1130</string>
-	<key>DTXcodeBuild</key>
-	<string>11C504</string>
-	<key>LSApplicationCategoryType</key>
-	<string>public.app-category.utilities</string>
-	<key>LSMinimumSystemVersion</key>
-	<string>10.7</string>
-	<key>NSHighResolutionCapable</key>
-	<true/>
-	<key>NSHumanReadableCopyright</key>
-	<string>Copyright © 2024-2026 Jade "oatmealine" Monoids</string>
-	<key>NSPrincipalClass</key>
-	<string>NSApplication</string>
-	<key>NSSupportsAutomaticGraphicsSwitching</key>
-	<false/>
-  <key>UTExportedTypeDeclarations</key>
-  <array>
-    <dict>
-      <key>UTTypeIdentifier</key>
-      <string>team.xdrv.xdrv-chart</string>
-      <key>UTTypeConformsTo</key>
-      <array>
-        <string>public.data</string>
-        <string>public.content</string>
-        <string>public.plain-text</string>
-      </array>
-      <key>UTTypeDescription</key>
-      <string>EX-XDRiVER Chart</string>
-      <!-- TODO: this doesn't work? why? -->
-      <!--<key>UTTypeIconFile</key>
-      <string>OS X AppIcon</string>-->
-      <key>UTTypeTagSpecification</key>
+    <key>CFBundleExecutable</key>
+    <string>trackmaker</string>
+    <key>CFBundleIconFile</key>
+    <string>OS X AppIcon</string>
+    <key>CFBundleIconName</key>
+    <string>OS X AppIcon</string>
+    <key>CFBundleIdentifier</key>
+    <string>zone.oat.trackmaker</string>
+    <key>CFBundleInfoDictionaryVersion</key>
+    <string>6.0</string>
+    <key>CFBundleName</key>
+    <string>trackmaker</string>
+    <key>CFBundlePackageType</key>
+    <string>APPL</string>
+    <key>CFBundleShortVersionString</key>
+    <string>{VERSION}</string>
+    <key>CFBundleSignature</key>
+    <string>LoVe</string>
+    <key>CFBundleSupportedPlatforms</key>
+    <array>
+      <string>MacOSX</string>
+    </array>
+    <key>DTCompiler</key>
+    <string>com.apple.compilers.llvm.clang.1_0</string>
+    <key>DTPlatformBuild</key>
+    <string>11C504</string>
+    <key>DTPlatformVersion</key>
+    <string>GM</string>
+    <key>DTSDKBuild</key>
+    <string>19B90</string>
+    <key>DTSDKName</key>
+    <string>macosx10.15</string>
+    <key>DTXcode</key>
+    <string>1130</string>
+    <key>DTXcodeBuild</key>
+    <string>11C504</string>
+    <key>LSApplicationCategoryType</key>
+    <string>public.app-category.utilities</string>
+    <key>LSMinimumSystemVersion</key>
+    <string>10.7</string>
+    <key>NSHighResolutionCapable</key>
+    <true />
+    <key>NSHumanReadableCopyright</key>
+    <string>Copyright © 2024-2026 Jade "oatmealine" Monoids</string>
+    <key>NSPrincipalClass</key>
+    <string>NSApplication</string>
+    <key>NSSupportsAutomaticGraphicsSwitching</key>
+    <false />
+    <key>UTExportedTypeDeclarations</key>
+    <array>
       <dict>
-        <key>public.filename-extension</key>
+        <key>UTTypeIdentifier</key>
+        <string>team.xdrv.xdrv-chart</string>
+        <key>UTTypeConformsTo</key>
         <array>
-          <string>xdrv</string>
+          <string>public.data</string>
+          <string>public.content</string>
+          <string>public.plain-text</string>
         </array>
+        <key>UTTypeDescription</key>
+        <string>EX-XDRiVER Chart</string>
+        <!-- TODO: this doesn't work? why? -->
+        <!--<key>UTTypeIconFile</key>
+      <string>OS X AppIcon</string>-->
+        <key>UTTypeTagSpecification</key>
+        <dict>
+          <key>public.filename-extension</key>
+          <array>
+            <string>xdrv</string>
+          </array>
+        </dict>
       </dict>
-    </dict>
-  </array>
-</dict>
+    </array>
+  </dict>
 </plist>

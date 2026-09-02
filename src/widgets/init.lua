@@ -67,6 +67,7 @@ local WidgetPointState = {
 ---@param to Widget
 function Widget:loseFocus(to)
 end
+
 function Widget:focus()
 end
 
@@ -78,6 +79,7 @@ end
 function Widget:translateLocal(x, y)
   return x - self.x, y - self.y
 end
+
 function Widget:translateInside(x, y)
   if not self.hasWindowDecorations then
     return x, y
@@ -90,8 +92,10 @@ end
 ---@param isRepeat boolean
 function Widget:key(key, scancode, isRepeat)
 end
+
 function Widget:textInput(t)
 end
+
 function Widget:eatsInputs()
   return false
 end
@@ -164,7 +168,8 @@ function Widget:drawFrame()
   if self.hasWindowDecorations then
     love.graphics.setColor(colors.border:unpack())
     love.graphics.setLineWidth(BORDER_WIDTH)
-    love.graphics.rectangle('fill', 0, 0, self.width + BORDER_WIDTH * 2, self.height + BAR_HEIGHT + BORDER_WIDTH * 2, colors.borderRadius, colors.borderRadius)
+    love.graphics.rectangle('fill', 0, 0, self.width + BORDER_WIDTH * 2, self.height + BAR_HEIGHT + BORDER_WIDTH * 2,
+      colors.borderRadius, colors.borderRadius)
 
     if self.focused then
       love.graphics.setColor(colors.windowFocused:unpack())
@@ -172,7 +177,8 @@ function Widget:drawFrame()
       love.graphics.setColor(colors.window:unpack())
     end
 
-    love.graphics.rectangle('fill', BORDER_WIDTH, BORDER_WIDTH, self.width, BAR_HEIGHT, colors.borderRadius, colors.borderRadius)
+    love.graphics.rectangle('fill', BORDER_WIDTH, BORDER_WIDTH, self.width, BAR_HEIGHT, colors.borderRadius,
+      colors.borderRadius)
 
     love.graphics.setFont(fonts.inter_16)
     local mx, my = love.graphics.inverseTransformPoint(love.mouse.getPosition())
@@ -182,7 +188,8 @@ function Widget:drawFrame()
     else
       love.graphics.setColor(colors.textTertiary:unpack())
     end
-    love.graphics.printf('x', self.width - BAR_HEIGHT, BAR_HEIGHT/2 - fonts.inter_16:getHeight()/2, BAR_HEIGHT, 'center')
+    love.graphics.printf('x', self.width - BAR_HEIGHT, BAR_HEIGHT / 2 - fonts.inter_16:getHeight() / 2, BAR_HEIGHT,
+      'center')
     --local crossScale = BAR_HEIGHT / crossIcon:getHeight()
     --love.graphics.draw(crossIcon, BORDER_WIDTH + self.width - BAR_HEIGHT/2, BORDER_WIDTH + BAR_HEIGHT/2, 0, crossScale, crossScale, crossIcon:getWidth()/2, crossIcon:getWidth()/2)
 
@@ -194,7 +201,8 @@ function Widget:drawFrame()
       else
         love.graphics.setColor((colors.windowText or colors.textSecondary):unpack())
       end
-      love.graphics.printf(self.title, BORDER_WIDTH, round(BAR_HEIGHT/2 - fonts.inter_12:getHeight()/2), self.width, 'center')
+      love.graphics.printf(self.title, BORDER_WIDTH, round(BAR_HEIGHT / 2 - fonts.inter_12:getHeight() / 2), self.width,
+        'center')
     end
   end
 
@@ -212,7 +220,7 @@ function Widget:drawFrame()
 end
 
 ---@type Widget[]
-local widgets = { }
+local widgets = {}
 
 ---@param w Widget
 function openWidget(w, centered)
@@ -225,8 +233,8 @@ function openWidget(w, centered)
   w:focus()
   w.focused = true
   if centered then
-    w.x = love.graphics.getWidth()/2 - w.width/2
-    w.y = love.graphics.getHeight()/2 - w.height/2
+    w.x = love.graphics.getWidth() / 2 - w.width / 2
+    w.y = love.graphics.getHeight() / 2 - w.height / 2
   end
   self.update()
 end
@@ -273,6 +281,7 @@ function self.update()
     end
   end
 end
+
 function self.callEvent(event)
   for _, widget in ipairs(widgets) do widget:event(event) end
 end
@@ -293,9 +302,9 @@ end
 local function clampWidget(w)
   local bx1, by1, bx2, by2 = w:getBoundingBox()
   w.x, w.y =
-    clamp(w.x, w.x - bx1, love.graphics.getWidth() + (w.x - bx2)),
-    -- +24 to account for action bar
-    clamp(w.y, w.y - by1 + 24, love.graphics.getHeight() + (w.y - by2))
+      clamp(w.x, w.x - bx1, love.graphics.getWidth() + (w.x - bx2)),
+      -- +24 to account for action bar
+      clamp(w.y, w.y - by1 + 24, love.graphics.getHeight() + (w.y - by2))
 end
 
 function self.mousepressed(x, y, button)
@@ -329,6 +338,7 @@ function self.mousepressed(x, y, button)
     end
   end
 end
+
 function self.mousemoved(x, y)
   if draggingWidget then
     draggingWidget.x, draggingWidget.y = x - dragX, y - dragY
@@ -339,6 +349,7 @@ function self.mousemoved(x, y)
   end
   self.update()
 end
+
 function self.mousereleased(x, y, button)
   if button == 1 and draggingWidget then
     draggingWidget.x, draggingWidget.y = x - dragX, y - dragY
@@ -348,16 +359,19 @@ function self.mousereleased(x, y, button)
     return true
   end
 end
+
 function self.textinput(t)
   if widgets[#widgets] then
     widgets[#widgets]:textInput(t)
   end
 end
+
 function self.keypressed(key, scancode, isRepeat)
   if widgets[#widgets] then
     return widgets[#widgets]:key(key, scancode, isRepeat)
   end
 end
+
 function self.reloadAssets()
   for _, widget in ipairs(widgets) do
     widget:reloadAssets()

@@ -34,10 +34,10 @@ end
 function InfobarWidget:drawFrame()
   local footerFields = {
     { 'Difficulty', chart.loaded and (xdrv.formatDifficulty(chart.metadata.chartDifficulty) .. ' ' .. chart.metadata.chartLevel) or '' },
-    { 'Snap', formatSnap(edit.quantIndex) },
-    { 'Beat', string.format('%.3f', conductor.beat) },
-    { 'Time', formatTime(conductor.time) },
-    { 'BPM', string.format('%.3f', conductor.getBPM()) },
+    { 'Snap',       formatSnap(edit.quantIndex) },
+    { 'Beat',       string.format('%.3f', conductor.beat) },
+    { 'Time',       formatTime(conductor.time) },
+    { 'BPM',        string.format('%.3f', conductor.getBPM()) },
   }
 
   local width = MARGIN
@@ -54,7 +54,7 @@ function InfobarWidget:drawFrame()
 
   self.width = width + MARGIN + MODE_WIDTH
   self.height = HEIGHT
-  self.x = love.graphics.getWidth()/2 - width / 2
+  self.x = love.graphics.getWidth() / 2 - width / 2
   self.y = love.graphics.getHeight() - 16 - self.height
 
   love.graphics.push()
@@ -70,9 +70,9 @@ function InfobarWidget:drawFrame()
     local cache = footerFieldCache[i]
     local text = cache[2]
     love.graphics.setColor(1, 1, 1, 1)
-    love.graphics.draw(text, round(x + (cache[3] - text:getWidth())/2), self.height/2 - text:getHeight())
+    love.graphics.draw(text, round(x + (cache[3] - text:getWidth()) / 2), self.height / 2 - text:getHeight())
     love.graphics.setColor(0.4, 0.4, 0.4, 1)
-    love.graphics.printf(f[1], round(x) - 50, 22, round(cache[3]) + 50*2, 'center')
+    love.graphics.printf(f[1], round(x) - 50, 22, round(cache[3]) + 50 * 2, 'center')
     x = x + cache[3] + GAP
   end
 
@@ -94,7 +94,8 @@ function InfobarWidget:drawFrame()
     love.graphics.setColor(0, 0, 0, 1)
   end
   love.graphics.setFont(fonts.inter_16)
-  love.graphics.printf(edit.modeName(mode), round(width + MARGIN), round(self.height/2 - fonts.inter_16:getHeight()/2), MODE_WIDTH, 'center')
+  love.graphics.printf(edit.modeName(mode), round(width + MARGIN), round(self.height / 2 - fonts.inter_16:getHeight() / 2),
+    MODE_WIDTH, 'center')
   love.graphics.setFont(fonts.inter_12)
 
   love.graphics.pop()

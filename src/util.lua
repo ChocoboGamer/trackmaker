@@ -21,7 +21,7 @@ end
 ---@param tab T
 ---@return T
 function copy(tab)
-  return {unpack(tab)}
+  return { unpack(tab) }
 end
 
 ---@generic T table<any>
@@ -50,7 +50,6 @@ function countKeys(t)
   end
   return n
 end
-
 
 ---@generic T
 ---@param t table<T, any>
@@ -136,9 +135,9 @@ end
 function formatTime(t)
   t = math.max(t, 0)
   return
-    lpad(tostring(math.floor(t / 60)), 2, '0') .. ':' ..
-    lpad(tostring(math.floor(t % 60)), 2, '0') .. '.' ..
-    lpad(tostring(math.floor((t * 100) % 100)), 2, '0')
+      lpad(tostring(math.floor(t / 60)), 2, '0') .. ':' ..
+      lpad(tostring(math.floor(t % 60)), 2, '0') .. '.' ..
+      lpad(tostring(math.floor((t * 100) % 100)), 2, '0')
 end
 
 ---@param o any
@@ -178,7 +177,8 @@ function pretty(o, depth, seen)
       end
     else
       for k, v in pairs(o) do
-        local ks = (type(k) == 'string' and string.find(k, '^[a-zA-Z0-9_]+$')) and k or ('[' .. pretty(k, depth + 1, seen) .. ']')
+        local ks = (type(k) == 'string' and string.find(k, '^[a-zA-Z0-9_]+$')) and k or
+        ('[' .. pretty(k, depth + 1, seen) .. ']')
         local vs = pretty(v, depth + 1, seen)
         local s = ks .. ' = ' .. vs
         local nPos = (string.find(str, '\n') or 0)
@@ -233,7 +233,6 @@ function looseComp(tab1, tab2)
   return true
 end
 
-
 ---@generic T
 ---@param t table<T>
 ---@param e T
@@ -265,7 +264,7 @@ end
 
 function screenCoords()
   local sw, sh = love.graphics.getDimensions()
-  return sw, sh, sw/2, sh/2
+  return sw, sh, sw / 2, sh / 2
 end
 
 ---@param font love.Font
@@ -347,6 +346,7 @@ function trunc(str, len)
   end
   return utf8sub(str, 1, len - 3) .. '...'
 end
+
 function truncEnd(str, len)
   local strLen = utf8.len(str)
   if strLen <= (len - 3) then

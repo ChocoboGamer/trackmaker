@@ -36,14 +36,14 @@ local function chartToNotedata(text)
   local notedata = {}
 
   for i, measure in ipairs(measures) do
-    local precision = 1/#measure
+    local precision = 1 / #measure
     local measureBeat = (i - 1) * 4
     for row, notes in ipairs(measure) do
       local beat = measureBeat + (row - 1) * precision * 4
       local column = 0
       for note in string.gmatch(notes, '%S') do
         if note ~= '0' then
-          table.insert(notedata, {beat, column, note})
+          table.insert(notedata, { beat, column, note })
         end
         column = column + 1
       end
@@ -93,13 +93,13 @@ local function listParser(value)
         local keyNew, valueNew = string.match(mergedValue, '([%d.]+)=(.+)')
         if keyNew and valueNew then
           table.remove(values, #values)
-          table.insert(values, {tonumber(keyNew), valueNew})
+          table.insert(values, { tonumber(keyNew), valueNew })
           --print('/ ', keyNew, valueNew)
         end
       end
       segments = { v }
       --print('+ ', key, value)
-      table.insert(values, {tonumber(key), value})
+      table.insert(values, { tonumber(key), value })
     else
       table.insert(segments, v)
     end
@@ -111,7 +111,7 @@ local function listParser(value)
     local keyNew, valueNew = string.match(mergedValue, '([%d.]+)=(.+)')
     if keyNew and valueNew then
       table.remove(values, #values)
-      table.insert(values, {tonumber(keyNew), valueNew})
+      table.insert(values, { tonumber(keyNew), valueNew })
       --print('/ ', keyNew, valueNew)
     end
   end
@@ -123,7 +123,7 @@ local function numListParser(value)
   local values = {}
 
   for _, n in ipairs(listParser(value)) do
-    table.insert(values, {n[1], tonumber(n[2])})
+    table.insert(values, { n[1], tonumber(n[2]) })
   end
 
   return values
@@ -136,7 +136,7 @@ function parsers.TIMESIGNATURES(value)
 
   for _, n in ipairs(listParser(value)) do
     local _, _, a, b = string.find(n[2], '([%d.]+)=([%d.]+)')
-    table.insert(sigs, {n[1], a, b})
+    table.insert(sigs, { n[1], a, b })
   end
 
   return sigs
@@ -170,7 +170,7 @@ function sm.parse(text, isSSC)
   for key, value in string.gmatch(text, '#([A-Z]-):(.-);') do
     value = filterComments(value)
     if res[key] and type(res[key]) ~= 'table' then
-      res[key] = {res[key], value}
+      res[key] = { res[key], value }
     elseif res[key] and type(res[key]) == 'table' then
       table.insert(res[key], value)
     else
@@ -198,7 +198,7 @@ function sm.parse(text, isSSC)
 
   if res.NOTES then
     if res.NOTES.notes then
-      res.NOTES = {res.NOTES}
+      res.NOTES = { res.NOTES }
     end
   end
 
@@ -208,7 +208,7 @@ function sm.parse(text, isSSC)
       res.NOTES = { res.NOTES }
     end
     if res.NOTES == nil then
-      res.NOTES = { }
+      res.NOTES = {}
     end
     for i, c in ipairs(res.NOTES) do
       table.insert(compatNotes, {

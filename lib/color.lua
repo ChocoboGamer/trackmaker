@@ -1,4 +1,3 @@
-
 --[[
  * Converts an HSL color value to RGB. Conversion formula
  * adapted from http://en.wikipedia.org/wiki/HSL_color_space.
@@ -12,11 +11,11 @@ local function hslToRgb(h, s, l)
     r, g, b = l, l, l -- achromatic
   else
     function hue2rgb(p, q, t)
-      if t < 0   then t = t + 1 end
-      if t > 1   then t = t - 1 end
-      if t < 1/6 then return p + (q - p) * 6 * t end
-      if t < 1/2 then return q end
-      if t < 2/3 then return p + (q - p) * (2/3 - t) * 6 end
+      if t < 0 then t = t + 1 end
+      if t > 1 then t = t - 1 end
+      if t < 1 / 6 then return p + (q - p) * 6 * t end
+      if t < 1 / 2 then return q end
+      if t < 2 / 3 then return p + (q - p) * (2 / 3 - t) * 6 end
       return p
     end
 
@@ -24,9 +23,9 @@ local function hslToRgb(h, s, l)
     if l < 0.5 then q = l * (1 + s) else q = l + s - l * s end
     local p = 2 * l - q
 
-    r = hue2rgb(p, q, h + 1/3)
+    r = hue2rgb(p, q, h + 1 / 3)
     g = hue2rgb(p, q, h)
-    b = hue2rgb(p, q, h - 1/3)
+    b = hue2rgb(p, q, h - 1 / 3)
   end
 
   return r, g, b
@@ -54,8 +53,10 @@ local function rgbToHsl(r, g, b)
     if max == r then
       h = (g - b) / d
       if g < b then h = h + 6 end
-    elseif max == g then h = (b - r) / d + 2
-    elseif max == b then h = (r - g) / d + 4
+    elseif max == g then
+      h = (b - r) / d + 2
+    elseif max == b then
+      h = (r - g) / d + 4
     end
     h = h / 6
   end
@@ -82,10 +83,12 @@ local function rgbToHsv(r, g, b)
     h = 0 -- achromatic
   else
     if max == r then
-    h = (g - b) / d
-    if g < b then h = h + 6 end
-    elseif max == g then h = (b - r) / d + 2
-    elseif max == b then h = (r - g) / d + 4
+      h = (g - b) / d
+      if g < b then h = h + 6 end
+    elseif max == g then
+      h = (b - r) / d + 2
+    elseif max == b then
+      h = (r - g) / d + 4
     end
     h = h / 6
   end
@@ -110,12 +113,18 @@ local function hsvToRgb(h, s, v)
 
   i = i % 6
 
-  if i == 0 then r, g, b = v, t, p
-  elseif i == 1 then r, g, b = q, v, p
-  elseif i == 2 then r, g, b = p, v, t
-  elseif i == 3 then r, g, b = p, q, v
-  elseif i == 4 then r, g, b = t, p, v
-  elseif i == 5 then r, g, b = v, p, q
+  if i == 0 then
+    r, g, b = v, t, p
+  elseif i == 1 then
+    r, g, b = q, v, p
+  elseif i == 2 then
+    r, g, b = p, v, t
+  elseif i == 3 then
+    r, g, b = p, q, v
+  elseif i == 4 then
+    r, g, b = t, p, v
+  elseif i == 5 then
+    r, g, b = v, p, q
   end
 
   return r, g, b
@@ -233,12 +242,15 @@ end
 function colmeta.__add(a, b)
   return genericop(a, b, function(a, b) return a + b end, 'add')
 end
+
 function colmeta.__sub(a, b)
   return genericop(a, b, function(a, b) return a - b end, 'sub')
 end
+
 function colmeta.__mul(a, b)
   return genericop(a, b, function(a, b) return a * b end, 'mul')
 end
+
 function colmeta.__div(a, b)
   return genericop(a, b, function(a, b) return a / b end, 'div')
 end
@@ -250,6 +262,7 @@ end
 function colmeta:__tostring()
   return '#' .. self:hex()
 end
+
 colmeta.__name = 'color'
 
 -- constructors
@@ -257,21 +270,21 @@ colmeta.__name = 'color'
 ---@return color
 function rgb(r, g, b, a)
   a = a or 1
-  return setmetatable({r = r, g = g, b = b, a = a}, colmeta)
+  return setmetatable({ r = r, g = g, b = b, a = a }, colmeta)
 end
 
 ---@return color
 function hsl(h, s, l, a)
   a = a or 1
   local r, g, b = hslToRgb(h, s, l)
-  return setmetatable({r = r, g = g, b = b, a = a}, colmeta)
+  return setmetatable({ r = r, g = g, b = b, a = a }, colmeta)
 end
 
 ---@return color
 function hsv(h, s, v, a)
   a = a or 1
   local r, g, b = hsvToRgb(h, s, v)
-  return setmetatable({r = r, g = g, b = b, a = a}, colmeta)
+  return setmetatable({ r = r, g = g, b = b, a = a }, colmeta)
 end
 
 --- smoother hsv. not correct but looks nicer
@@ -285,8 +298,10 @@ end
 function hex(hex)
   hex = string.gsub(hex, '#', '')
   if string.len(hex) == 3 then
-    return rgb((tonumber('0x' .. string.sub(hex, 1, 1)) * 17) / 255, (tonumber('0x' .. string.sub(hex, 2, 2)) * 17) / 255, (tonumber('0x' .. string.sub(hex, 3, 3)) * 17) / 255)
+    return rgb((tonumber('0x' .. string.sub(hex, 1, 1)) * 17) / 255, (tonumber('0x' .. string.sub(hex, 2, 2)) * 17) / 255,
+      (tonumber('0x' .. string.sub(hex, 3, 3)) * 17) / 255)
   else
-    return rgb(tonumber('0x' .. string.sub(hex, 1, 2)) / 255, tonumber('0x' .. string.sub(hex, 3, 4)) / 255, tonumber('0x' .. string.sub(hex, 5, 6)) / 255)
+    return rgb(tonumber('0x' .. string.sub(hex, 1, 2)) / 255, tonumber('0x' .. string.sub(hex, 3, 4)) / 255,
+      tonumber('0x' .. string.sub(hex, 5, 6)) / 255)
   end
 end

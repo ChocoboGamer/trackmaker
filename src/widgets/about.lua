@@ -4,7 +4,7 @@ local colors = require 'src.colors'
 local AboutWidget = Widget:extend()
 
 local jillo = love.graphics.newImage('assets/sprites/jillo.png')
-local JILLO_SCALE = 0.7
+local JILLO_SCALE = 0.6
 local WOBBLE_DURATION = 0.4
 
 local function outSine(x) return math.sin(x * (math.pi * 0.5)) end
@@ -21,10 +21,10 @@ end
 function AboutWidget:click(x, y, button)
   local jy = 128
   if
-    x > self.width/2 - jillo:getWidth() / 2 * JILLO_SCALE and
-    x < self.width/2 + jillo:getWidth() / 2 * JILLO_SCALE and
-    y > jy - jillo:getHeight() / 2 * JILLO_SCALE and
-    y < jy + jillo:getHeight() / 2 * JILLO_SCALE
+      x > self.width / 2 - jillo:getWidth() / 2 * JILLO_SCALE and
+      x < self.width / 2 + jillo:getWidth() / 2 * JILLO_SCALE and
+      y > jy - jillo:getHeight() / 2 * JILLO_SCALE and
+      y < jy + jillo:getHeight() / 2 * JILLO_SCALE
   then
     self.lastClick = love.timer.getTime()
   end
@@ -43,15 +43,19 @@ function AboutWidget:draw()
 
   love.graphics.setColor(1, 1, 1, 1)
   love.graphics.setFont(fonts.inter_16)
-  love.graphics.printf({{colors.text:unpack()}, 'trackmaker', {colors.textTertiary:unpack()}, ' v' .. release.version}, 0, offset, self.width, 'center')
+  love.graphics.printf({ { colors.text:unpack() }, 'trackmaker', { colors.textTertiary:unpack() }, ' v' ..
+  release.version }, 0, offset, self.width, 'center')
   love.graphics.setColor(colors.textSecondary:unpack())
   love.graphics.setFont(fonts.inter_12)
   love.graphics.printf('A GUI chart editor for EX-XDRiVER', 0, offset + 22, self.width, 'center')
   love.graphics.printf('by oatmealine', 0, offset + 40, self.width, 'center')
+  love.graphics.printf('modified by Chegg', 0, offset + 58, self.width, 'center')
   love.graphics.setColor(1, 1, 1, 1)
-  love.graphics.draw(jillo, self.width/2, offset + 40 + 80, 0, sx, sy, jillo:getWidth()/2, jillo:getHeight()/2)
+  love.graphics.draw(jillo, self.width / 2, offset + 40 + 85, 0, sx, sy, jillo:getWidth() / 2, jillo:getHeight() / 2)
   love.graphics.setColor(colors.textSecondary:unpack())
-  love.graphics.printf('Licensed under the zlib license\nCopyright © 2024-2026\nJade "oatmealine" Monoids\nSee license.txt for more information', 0, offset + 180, self.width, 'center')
+  love.graphics.printf(
+  'Licensed under the zlib license\nCopyright © 2024-2026\nJade "oatmealine" Monoids\nSee license.txt for more information',
+    0, offset + 180, self.width, 'center')
 end
 
 return AboutWidget

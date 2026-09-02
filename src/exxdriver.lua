@@ -34,13 +34,15 @@ function self.getSavePath()
     print('Using unsupported platform ' .. love.system.getOS() .. ', expect issues')
     return ''
   end
-  
+
   print('Failed to find platform path')
   return ''
 end
+
 function self.getColorSchemePath()
   return self.getSavePath() .. '/Data/ColorSchemes'
 end
+
 function self.getAdditionalFolders()
   local filePath = self.getSavePath() .. '/Data/additionalSongFolders.json'
   local file = io.open(filePath, 'r')

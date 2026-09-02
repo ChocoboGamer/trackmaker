@@ -48,7 +48,8 @@ function Button:draw()
   else
     love.graphics.setColor(colors.text:unpack())
   end
-  love.graphics.draw(self.textObj, self.width/2 - self.textObj:getWidth()/2, self.height/2 - self.textObj:getHeight()/2)
+  love.graphics.draw(self.textObj, self.width / 2 - self.textObj:getWidth() / 2,
+    self.height / 2 - self.textObj:getHeight() / 2)
 end
 
 return Button

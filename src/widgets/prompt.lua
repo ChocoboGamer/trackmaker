@@ -1,12 +1,12 @@
-local Container = require 'src.ui.container'
-local Button    = require 'src.ui.button'
-local Label     = require 'src.ui.label'
-local UIWidget  = require 'src.widgets.ui'
+local Container    = require 'src.ui.container'
+local Button       = require 'src.ui.button'
+local Label        = require 'src.ui.label'
+local UIWidget     = require 'src.widgets.ui'
 
 ---@class PromptWidget : UIWidget
 local PromptWidget = UIWidget:extend()
 
-local WIDTH = 300
+local WIDTH        = 300
 
 ---@alias PromptAction { text: string, click: fun():nil }
 

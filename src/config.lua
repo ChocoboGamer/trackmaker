@@ -77,6 +77,7 @@ end
 function self.save()
   love.filesystem.write(CONFIG_FILENAME, json.encode(self.config))
 end
+
 function self.load()
   local parsed = {}
   if love.filesystem.getInfo(CONFIG_FILENAME, 'file') then

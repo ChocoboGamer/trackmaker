@@ -5,45 +5,52 @@ local logs      = require 'src.logs'
 local preview   = require 'src.preview'
 
 -- globaled to avoid dependency hell issues
-events = {}
+events          = {}
 
 ---@param event XDRVNote | XDRVGearShift | XDRVDrift
 function events.onNotePlace(event)
   logs.logFile('event : onNotePlace')
   events.onNotesModify(event)
 end
+
 ---@param event XDRVNote | XDRVGearShift | XDRVDrift
 function events.onNoteRemove(event)
   logs.logFile('event : onNoteRemove')
   events.onNotesModify(event)
 end
+
 ---@param event XDRVNote | XDRVGearShift | XDRVDrift
 function events.onNoteAlter(event)
   logs.logFile('event : onNoteAlter')
   events.onNotesModify(event)
 end
+
 ---@param event (XDRVNote | XDRVGearShift | XDRVDrift)?
 function events.onNotesModify(event)
   logs.logFile('event : onNotesModify')
 end
+
 ---@param event XDRVBPMChange | XDRVWarp | XDRVStop | XDRVStopSeconds | XDRVScroll | XDRVTimeSignature | XDRVComboTicks | XDRVLabel | XDRVFake | XDRVSceneEvent | XDRVCheckpoint | XDRVMeasureLine
 function events.onEventPlace(event)
   logs.logFile('event : onEventPlace')
 
   events.onEventsModify(event)
 end
+
 ---@param event XDRVBPMChange | XDRVWarp | XDRVStop | XDRVStopSeconds | XDRVScroll | XDRVTimeSignature | XDRVComboTicks | XDRVLabel | XDRVFake | XDRVSceneEvent | XDRVCheckpoint | XDRVMeasureLine
 function events.onEventRemove(event)
   logs.logFile('event : onEventRemove')
 
   events.onEventsModify(event)
 end
+
 ---@param event XDRVBPMChange | XDRVWarp | XDRVStop | XDRVStopSeconds | XDRVScroll | XDRVTimeSignature | XDRVComboTicks | XDRVLabel | XDRVFake | XDRVSceneEvent | XDRVCheckpoint | XDRVMeasureLine
 function events.onEventAlter(event)
   logs.logFile('event : onEventAlter')
 
   events.onEventsModify(event)
 end
+
 ---@param event (XDRVBPMChange | XDRVWarp | XDRVStop | XDRVStopSeconds | XDRVScroll | XDRVTimeSignature | XDRVComboTicks | XDRVLabel | XDRVFake | XDRVSceneEvent | XDRVCheckpoint | XDRVMeasureLine)?
 function events.onEventsModify(event)
   logs.logFile('event : onEventsModify')
@@ -68,6 +75,7 @@ function events.onThingPlace(thing)
   end
   events.onChartEdit(thing)
 end
+
 ---@param thing XDRVThing
 function events.onThingRemove(thing)
   logs.logFile('event : onThingRemove')
@@ -79,6 +87,7 @@ function events.onThingRemove(thing)
   end
   events.onChartEdit(thing)
 end
+
 ---@param thing XDRVThing
 function events.onThingAlter(thing)
   logs.logFile('event : onThingAlter')
@@ -99,6 +108,7 @@ function events.onChartEdit(thing)
   conductor.initStates()
   preview.bakeEases()
 end
+
 function events.onChartLoad()
   logs.logFile('event : onChartLoad')
 

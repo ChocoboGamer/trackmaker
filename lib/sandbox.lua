@@ -1,8 +1,8 @@
 local sandbox = {
-  _VERSION      = "sandbox 0.5",
-  _DESCRIPTION  = "A pure-lua solution for running untrusted Lua code.",
-  _URL          = "https://github.com/kikito/sandbox.lua",
-  _LICENSE      = [[
+  _VERSION     = 'sandbox 0.5',
+  _DESCRIPTION = 'A pure-lua solution for running untrusted Lua code.',
+  _URL         = 'https://github.com/kikito/sandbox.lua',
+  _LICENSE     = [[
     MIT LICENSE
 
     Copyright (c) 2021 Enrique García Cota
@@ -30,11 +30,11 @@ local sandbox = {
 }
 
 -- quotas don't work in LuaJIT since debug.sethook works differently there
-local quota_supported = type(_G.jit) == "nil"
+local quota_supported = type(_G.jit) == 'nil'
 sandbox.quota_supported = quota_supported
 
 -- PUC-Rio Lua 5.1 does not support deactivation of bytecode
-local bytecode_blocked = _ENV or type(_G.jit) == "table"
+local bytecode_blocked = _ENV or type(_G.jit) == 'table'
 sandbox.bytecode_blocked = bytecode_blocked
 
 -- The base environment is merged with the given env option (or an empty table, if no env provided)
@@ -122,7 +122,7 @@ function sandbox.protect(code, options)
 
   local quota = false
   if options.quota and not quota_supported then
-    error("options.quota is not supported on this environment (usually LuaJIT). Please unset options.quota")
+    error('options.quota is not supported on this environment (usually LuaJIT). Please unset options.quota')
   end
   if options.quota ~= false then
     quota = options.quota or 500000
@@ -157,18 +157,17 @@ function sandbox.protect(code, options)
   end
 
   return function(...)
-
     if quota and quota_supported then
       local timeout = function()
         cleanup()
         error('Quota exceeded: ' .. tostring(quota))
       end
-      sethook(timeout, "", quota)
+      sethook(timeout, '', quota)
     end
 
     string.rep = nil -- luacheck: no global
 
-    local t = {pcall(f, ...)}
+    local t = { pcall(f, ...) }
 
     cleanup()
 
@@ -184,6 +183,6 @@ function sandbox.run(code, options, ...)
 end
 
 -- make sandbox(f) == sandbox.protect(f)
-setmetatable(sandbox, {__call = function(_,code,o) return sandbox.protect(code,o) end})
+setmetatable(sandbox, { __call = function(_, code, o) return sandbox.protect(code, o) end })
 
 return sandbox

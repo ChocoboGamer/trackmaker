@@ -49,7 +49,7 @@ function Checkmark:draw()
     love.graphics.setColor(colors.text:unpack())
   end
   if self.enabled then
-    love.graphics.printf('✓', 0, self.height/2 - fonts.inter_12:getHeight()/2, self.width, 'center')
+    love.graphics.printf('✓', 0, self.height / 2 - fonts.inter_12:getHeight() / 2, self.width, 'center')
   end
 end
 

@@ -35,7 +35,7 @@ function ContextWidget:new(x, y, entries)
     if entry[1] then
       local text = love.graphics.newText(fonts.inter_12, entry[1])
       local w = text:getWidth()
-      self.texts[i] =  text
+      self.texts[i] = text
       if entry.bind then
         local bindText = love.graphics.newText(fonts.inter_12, keybinds.formatBind(entry.bind))
         self.bindTexts[i] = bindText
@@ -71,7 +71,7 @@ function ContextWidget:reloadAssets()
     if entry[1] then
       local text = love.graphics.newText(fonts.inter_12, entry[1])
       local w = text:getWidth()
-      self.texts[i] =  text
+      self.texts[i] = text
       if entry.bind then
         local bindText = love.graphics.newText(fonts.inter_12, keybinds.formatBind(entry.bind))
         self.bindTexts[i] = bindText
@@ -101,6 +101,7 @@ function ContextWidget:getElemHeight(i)
     return 8
   end
 end
+
 function ContextWidget:getElemY(elem)
   local y = 0
   for i = 1, elem - 1 do
@@ -213,22 +214,26 @@ function ContextWidget:draw()
 
       love.graphics.setColor(colors.textSecondary:unpack())
       if entry.formatValue then
-        love.graphics.printf(entry.formatValue(entry.value), MARGIN, y + HEIGHT/2 - fonts.inter_12:getHeight()/2, self.width - MARGIN*2, 'right')
+        love.graphics.printf(entry.formatValue(entry.value), MARGIN, y + HEIGHT / 2 - fonts.inter_12:getHeight() / 2,
+          self.width - MARGIN * 2, 'right')
       else
-        love.graphics.printf(string.format('%.2f', entry.value), MARGIN, y + HEIGHT/2 - fonts.inter_12:getHeight()/2, self.width - MARGIN*2, 'right')
+        love.graphics.printf(string.format('%.2f', entry.value), MARGIN, y + HEIGHT / 2 - fonts.inter_12:getHeight() / 2,
+          self.width - MARGIN * 2, 'right')
       end
       love.graphics.setColor(colors.text:unpack())
       if hovered then
         love.graphics.setColor((colors.hoverText or colors.text):unpack())
       end
-      love.graphics.arc('fill', MARGIN + LEFT_PAD/2, y + HEIGHT/2, LEFT_PAD * 0.35, -math.pi * 0.5, (-math.pi * 0.5) + entry.value * math.pi * 2)
+      love.graphics.arc('fill', MARGIN + LEFT_PAD / 2, y + HEIGHT / 2, LEFT_PAD * 0.35, -math.pi * 0.5,
+        (-math.pi * 0.5) + entry.value * math.pi * 2)
 
       if (not hovered) and colors.hoverText then
         local x1, y1 = love.graphics.transformPoint(0, y)
         local x2, y2 = love.graphics.transformPoint(self.width * entry.value, botY)
         love.graphics.setScissor(x1, y1, x2 - x1, y2 - y1)
         love.graphics.setColor(colors.hoverText:unpack())
-        love.graphics.arc('fill', MARGIN + LEFT_PAD/2, y + HEIGHT/2, LEFT_PAD * 0.35, -math.pi * 0.5, (-math.pi * 0.5) + entry.value * math.pi * 2)
+        love.graphics.arc('fill', MARGIN + LEFT_PAD / 2, y + HEIGHT / 2, LEFT_PAD * 0.35, -math.pi * 0.5,
+          (-math.pi * 0.5) + entry.value * math.pi * 2)
         love.graphics.setScissor()
       end
     end
@@ -241,10 +246,10 @@ function ContextWidget:draw()
         local x3, _  = love.graphics.transformPoint(self.width, botY)
         love.graphics.setScissor(x1, y1, x2 - x1, y2 - y1)
         love.graphics.setColor(colors.hoverText:unpack())
-        love.graphics.draw(text, MARGIN + LEFT_PAD, round(y + HEIGHT/2 - text:getHeight()/2))
+        love.graphics.draw(text, MARGIN + LEFT_PAD, round(y + HEIGHT / 2 - text:getHeight() / 2))
         love.graphics.setScissor(x2, y1, x3 - x2, y2 - y1)
         love.graphics.setColor(colors.text:unpack())
-        love.graphics.draw(text, MARGIN + LEFT_PAD, round(y + HEIGHT/2 - text:getHeight()/2))
+        love.graphics.draw(text, MARGIN + LEFT_PAD, round(y + HEIGHT / 2 - text:getHeight() / 2))
         love.graphics.setScissor()
       else
         love.graphics.setColor(colors.text:unpack())
@@ -254,17 +259,18 @@ function ContextWidget:draw()
         if entry.disabled then
           love.graphics.setColor(colors.textSecondary:unpack())
         end
-        love.graphics.draw(text, MARGIN + LEFT_PAD, round(y + HEIGHT/2 - text:getHeight()/2))
+        love.graphics.draw(text, MARGIN + LEFT_PAD, round(y + HEIGHT / 2 - text:getHeight() / 2))
       end
     else
       love.graphics.setColor((colors.dull or colors.hover):unpack())
-      love.graphics.line(0, (y + botY)/2, self.width, (y + botY)/2)
+      love.graphics.line(0, (y + botY) / 2, self.width, (y + botY) / 2)
     end
 
     local bindText = self.bindTexts[i]
     if bindText then
       love.graphics.setColor(colors.textSecondary:unpack())
-      love.graphics.draw(bindText, self.width - MARGIN - RIGHT_PAD - bindText:getWidth(), round(y + HEIGHT/2 - bindText:getHeight()/2))
+      love.graphics.draw(bindText, self.width - MARGIN - RIGHT_PAD - bindText:getWidth(),
+        round(y + HEIGHT / 2 - bindText:getHeight() / 2))
     end
 
     if entry.toggle and entry.value then
@@ -272,14 +278,14 @@ function ContextWidget:draw()
       if hovered then
         love.graphics.setColor((colors.hoverText or colors.text):unpack())
       end
-      love.graphics.print('✓', MARGIN, y + HEIGHT/2 - fonts.inter_12:getHeight()/2)
+      love.graphics.print('✓', MARGIN, y + HEIGHT / 2 - fonts.inter_12:getHeight() / 2)
     end
     if entry.expandable then
       love.graphics.setColor(colors.text:unpack())
       if hovered then
         love.graphics.setColor((colors.hoverText or colors.text):unpack())
       end
-      love.graphics.printf('►', MARGIN, y + HEIGHT/2 - fonts.inter_12:getHeight()/2, self.width - MARGIN*2, 'right')
+      love.graphics.printf('►', MARGIN, y + HEIGHT / 2 - fonts.inter_12:getHeight() / 2, self.width - MARGIN * 2, 'right')
     end
 
     y = botY

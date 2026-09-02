@@ -1,5 +1,5 @@
 release = nil
-do 
+do
   local t = {}
   t.window = {}
   t.modules = {}
@@ -217,11 +217,11 @@ function love.draw()
   love.graphics.setColor(1, 1, 1, 1)
   love.graphics.print(
     'FPS ' .. love.timer.getFPS()
-  , 0, sh - fonts.inter_12:getHeight())
+    , 0, sh - fonts.inter_12:getHeight())
   if not renderer.ignoreCache() then
     love.graphics.print(
       'last draw took ' .. math.floor(renderer.drawProfile * 1000) .. 'ms | FPS ' .. math.floor(1 / renderer.drawProfile)
-    , 0, sh - fonts.inter_12:getHeight() * 2)
+      , 0, sh - fonts.inter_12:getHeight() * 2)
   end
 
   local y = getTopPadding()
@@ -236,7 +236,9 @@ function love.draw()
       love.graphics.print((v.message or 'Action'), 16, y)
       y = y + 14
     end
-    love.graphics.print('saved at ' .. chart.savedAtHistoryIndex .. ', #history: ' .. #chart.history .. ', #future: ' .. #chart.future, 16, y)
+    love.graphics.print(
+      'saved at ' .. chart.savedAtHistoryIndex .. ', #history: ' .. #chart.history .. ', #future: ' .. #chart.future, 16,
+      y)
   end
   if config.config.debug.modsDisplay then
     for mod in pairs(preview.getKnownModNames()) do
@@ -256,13 +258,16 @@ function love.mousepressed(x, y, button)
   if widgets.mousepressed(x, y, button) then return end
   renderer.mousepressed(x, y, button)
 end
+
 function love.mousemoved(x, y)
   widgets.mousemoved(x, y)
 end
+
 function love.mousereleased(x, y, button)
   if widgets.mousereleased(x, y, button) then return end
   renderer.mousereleased(x, y, button)
 end
+
 function love.keypressed(key, scancode, isrepeat)
   if widgets.keypressed(key, scancode, isrepeat) then
     return
@@ -270,10 +275,12 @@ function love.keypressed(key, scancode, isrepeat)
   if widgets.eatsInputs() then return end
   edit.keypressed(key, scancode, isrepeat)
 end
+
 function love.keyreleased(key, scancode)
   if widgets.eatsInputs() then return end
   edit.keyreleased(key, scancode)
 end
+
 function love.wheelmoved(ox, oy)
   renderer.wheelmoved(oy)
 end
@@ -291,8 +298,8 @@ function love.quit()
   if chart.loaded and chart.isDirty() and not shouldQuitOnSave then
     shouldQuitOnSave = true
     openWidget(PromptWidget('Your chart has unsaved changes. Would you like to save?', {
-      { text = 'Yes', click = function() chart.quickSave() end},
-      { text = 'No', click = function() love.event.quit(0) end },
+      { text = 'Yes',    click = function() chart.quickSave() end },
+      { text = 'No',     click = function() love.event.quit(0) end },
       { text = 'Cancel', click = function() shouldQuitOnSave = false end } }), true)
     if macos then macos.bounceDockApp() end
     return true

@@ -40,11 +40,13 @@ function Container:click(x, y, button)
     end
   end
 end
+
 function Container:move(x, y)
   for _, child in ipairs(self.children) do
     child:move(x - child.x, y - child.y)
   end
 end
+
 function Container:textInput(t)
   for _, child in ipairs(self.children) do
     if child.active then
@@ -52,6 +54,7 @@ function Container:textInput(t)
     end
   end
 end
+
 function Container:key(key, scancode, isRepeat)
   for _, child in ipairs(self.children) do
     if child.active then
@@ -59,6 +62,7 @@ function Container:key(key, scancode, isRepeat)
     end
   end
 end
+
 function Container:eatsInputs()
   for _, child in ipairs(self.children) do
     if child.active then
@@ -106,8 +110,8 @@ function Container.placeFormLike(rows, width)
 
   for i, row in ipairs(rows) do
     local y = PAD + (i - 1) * Y_GAP
-    row[1].x = PAD + labelWidth/2 - row[1].width/2
-    row[1].y = y + Y_GAP/2 - row[1].height/2
+    row[1].x = PAD + labelWidth / 2 - row[1].width / 2
+    row[1].y = y + Y_GAP / 2 - row[1].height / 2
     table.insert(nodes, row[1])
 
     local remainderX = PAD + labelWidth
@@ -119,11 +123,11 @@ function Container.placeFormLike(rows, width)
     for i, child in ipairs(row[2]) do
       local width = remainder / #row[2] - GAP
       child.x = remainderX + x
-      child.y = y + Y_GAP/2 - child.height/2
+      child.y = y + Y_GAP / 2 - child.height / 2
       if not child:is(Checkmark) then
         child.width = width
       else
-        child.x = child.x + width/2 - child.width/2
+        child.x = child.x + width / 2 - child.width / 2
       end
       x = x + width
       table.insert(nodes, child)
@@ -146,15 +150,15 @@ function Container.placeRows(rows, width, center)
   for _, row in ipairs(rows) do
     local x = PAD
     if center then
-      x = x + width/2
+      x = x + width / 2
       for _, elem in ipairs(row) do
-        x = x - elem.width/2 - GAP/2
+        x = x - elem.width / 2 - GAP / 2
       end
-      x = x - GAP/2
+      x = x - GAP / 2
     end
     for i, elem in ipairs(row) do
       elem.x = x
-      elem.y = y + Y_GAP/2 - elem.height/2
+      elem.y = y + Y_GAP / 2 - elem.height / 2
       table.insert(nodes, elem)
 
       x = x + elem.width + GAP

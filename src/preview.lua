@@ -1,11 +1,11 @@
-local config        = require 'src.config'
-local easeFunctions = require 'lib.ease'
-local conductor     = require 'src.conductor'
-local xdrv          = require 'lib.xdrv'
-local logs          = require 'src.logs'
-local xdrvColors    = require 'src.xdrvcolors'
-local sort          = require 'lib.sort'
-local sandbox       = require 'lib.sandbox'
+local config             = require 'src.config'
+local easeFunctions      = require 'lib.ease'
+local conductor          = require 'src.conductor'
+local xdrv               = require 'lib.xdrv'
+local logs               = require 'src.logs'
+local xdrvColors         = require 'src.xdrvcolors'
+local sort               = require 'lib.sort'
+local sandbox            = require 'lib.sandbox'
 
 local easeFunctionsLower = {}
 for k, v in pairs(easeFunctions) do easeFunctionsLower[string.lower(k)] = v end
@@ -24,7 +24,7 @@ end
 local ArgSet = {}
 
 function ArgSet:push(...)
-  for _, v in ipairs({...}) do
+  for _, v in ipairs({ ... }) do
     table.insert(self, v)
   end
 end
@@ -44,9 +44,11 @@ end
 function ArgSet:getNumber(idx, nillable)
   return self:getValue(idx, 'number', nillable)
 end
+
 function ArgSet:getString(idx, nillable)
   return self:getValue(idx, 'string', nillable)
 end
+
 function ArgSet:getBoolean(idx, nillable)
   return self:getValue(idx, 'boolean', nillable)
 end
@@ -61,7 +63,7 @@ end
 local StringArgSet = {}
 
 function StringArgSet:push(...)
-  for _, v in ipairs({...}) do
+  for _, v in ipairs({ ... }) do
     if type(v) ~= 'string' then
       error('expected string but passed a ' .. type(v), 2)
     end
@@ -81,10 +83,11 @@ function StringArgSet:getNumber(idx, nillable)
   end
   local num = tonumber(value)
   if num == nil then
-    error('expected arg #' .. idx .. ' to be number, got `' .. value .. '`' , 0)
+    error('expected arg #' .. idx .. ' to be number, got `' .. value .. '`', 0)
   end
   return num
 end
+
 function StringArgSet:getString(idx, nillable)
   local value = rawget(self, idx)
   if value == nil then
@@ -93,6 +96,7 @@ function StringArgSet:getString(idx, nillable)
   end
   return value
 end
+
 function StringArgSet:getBoolean(idx, nillable)
   local value = rawget(self, idx)
   if value == nil then
@@ -105,7 +109,7 @@ function StringArgSet:getBoolean(idx, nillable)
   if value == 'false' then
     return false
   end
-  error('expected arg #' .. idx .. ' to be boolean, got `' .. value .. '`' , 0)
+  error('expected arg #' .. idx .. ' to be boolean, got `' .. value .. '`', 0)
 end
 
 StringArgSet.__index = StringArgSet
@@ -165,13 +169,15 @@ local function easeSort(a, b)
 end
 
 local function genericSetConst(target, value)
-  return function() return {
-    target = target,
-    value = value,
-    dur = 0,
-    time = false,
-    ease = easeFunctions.Instant,
-  } end
+  return function()
+    return {
+      target = target,
+      value = value,
+      dur = 0,
+      time = false,
+      ease = easeFunctions.Instant,
+    }
+  end
 end
 
 local function genericSet(target)
@@ -331,7 +337,8 @@ function self.getEasedValue(type, beat)
       a = ((ease.time and time or beat) - (ease.time and ease.time or ease.beat)) / ease.ease.dur
     end
 
-    local easeValue = mix(ease.ease.startValue or valuesBuffer[target] or defaultValues[target] or 0, ease.ease.value, ease.ease.ease(clamp(a, 0, 1)))
+    local easeValue = mix(ease.ease.startValue or valuesBuffer[target] or defaultValues[target] or 0, ease.ease.value,
+      ease.ease.ease(clamp(a, 0, 1)))
     easedValuesBuffer[target] = easeValue
 
     if (ease.time and time or beat) >= ((ease.time and ease.time or ease.beat) + ease.ease.dur) then
@@ -347,6 +354,7 @@ function self.getEasedValue(type, beat)
 
   return easedValuesBuffer[type] or valuesBuffer[type] or defaultValues[type] or 0
 end
+
 function self.getModValue(type)
   return self.getEasedValue('mod_' .. type)
 end
@@ -392,11 +400,11 @@ end
 ---@param lane XDRVLane
 function self.getPathBloom(lane)
   return self.getEasedValue('BloomBeat')
-    * (1 - easeFunctions.OutQuad(conductor.beat % 1)) * 0.5
-    -- since we're faking bloom (for now), just multiply both of them, fuck it
-    * self.getEasedValue('BloomIntensity')
-    * self.getEasedValue('BloomDiffusion')
-    * self.getPathAlpha(lane)
+      * (1 - easeFunctions.OutQuad(conductor.beat % 1)) * 0.5
+      -- since we're faking bloom (for now), just multiply both of them, fuck it
+      * self.getEasedValue('BloomIntensity')
+      * self.getEasedValue('BloomDiffusion')
+      * self.getPathAlpha(lane)
 end
 
 local function getNotePosAxis(column, axis)
@@ -407,6 +415,7 @@ function self.getNotePos(column)
   local str = column and tostring(column) or ''
   return getNotePosAxis(str, 'x'), getNotePosAxis(str, 'y'), getNotePosAxis(str, 'z')
 end
+
 local function getNoteScaleAxis(column, axis)
   return self.getModValue('note' .. column .. '_scale_' .. axis) * self.getModValue('note' .. '_scale_' .. axis)
 end
@@ -448,6 +457,7 @@ function fauxXDRV.RunEvent(eventName, b, c, ...)
     error('Error adding event: ' .. res, 2)
   end
 end
+
 fauxXDRV.run_event = fauxXDRV.RunEvent
 
 function fauxXDRV.AddMeasureLine(a, b, lane)
@@ -469,13 +479,14 @@ function fauxXDRV.AddMeasureLine(a, b, lane)
   end
   table.insert(measureLines, { beat = beat, measureLine = lane or -1 })
 end
+
 fauxXDRV.add_measure_line = fauxXDRV.AddMeasureLine
 
 function fauxXDRV.GetPlayerNoteColor(column)
   if column < 0 or column > 7 then
     error('column index (' .. column .. ') out of range (0..7)', 2)
   end
-  return {({
+  return { ({
     xdrvColors.scheme.colors.LeftGear,
     xdrvColors.scheme.colors.Column1,
     xdrvColors.scheme.colors.Column2,
@@ -484,38 +495,47 @@ function fauxXDRV.GetPlayerNoteColor(column)
     xdrvColors.scheme.colors.Column5,
     xdrvColors.scheme.colors.Column6,
     xdrvColors.scheme.colors.RightGear,
-  })[column - 1]:unpack()}
+  })[column - 1]:unpack() }
 end
+
 fauxXDRV.get_player_note_color = fauxXDRV.GetPlayerNoteColor
 
 function fauxXDRV.GetPlayerNoteColorChannel(column, index)
   return fauxXDRV.GetPlayerNoteColor(column)[index - 1]
 end
+
 fauxXDRV.get_player_note_color_channel = fauxXDRV.GetPlayerNoteColorChannel
 
 function fauxXDRV.GetPlayerNoteColorRed(column) return fauxXDRV.GetPlayerNoteColor(column)[1] end
+
 fauxXDRV.get_player_note_color_red = fauxXDRV.GetPlayerNoteColorRed
 function fauxXDRV.GetPlayerNoteColorGreen(column) return fauxXDRV.GetPlayerNoteColor(column)[2] end
+
 fauxXDRV.get_player_note_color_green = fauxXDRV.GetPlayerNoteColorGreen
 function fauxXDRV.GetPlayerNoteColorBlue(column) return fauxXDRV.GetPlayerNoteColor(column)[3] end
+
 fauxXDRV.get_player_note_color_blue = fauxXDRV.GetPlayerNoteColorBlue
 function fauxXDRV.GetPlayerNoteColorAlpha(column) return fauxXDRV.GetPlayerNoteColor(column)[4] end
+
 fauxXDRV.get_player_note_color_alpha = fauxXDRV.GetPlayerNoteColorAlpha
 
 function fauxXDRV.GetPlayerScrollSpeed()
   return math.max(config.config.scrollSpeed, 0.5)
 end
+
 fauxXDRV.get_player_scroll_speed = fauxXDRV.GetPlayerScrollSpeed
 
 function fauxXDRV.GetChartDifficulty()
   return chart.metadata.chartDifficulty
 end
+
 fauxXDRV.get_chart_difficulty = fauxXDRV.GetChartDifficulty
 
 function fauxXDRV.GetPlayerRefreshRate()
   local _, _, flags = love.window.getMode()
   return flags.refreshrate
 end
+
 fauxXDRV.get_player_refresh_rate = fauxXDRV.GetPlayerRefreshRate
 
 function fauxXDRV.Set(...)
@@ -547,6 +567,7 @@ function fauxXDRV.Set(...)
     },
   })
 end
+
 fauxXDRV.set = fauxXDRV.Set
 fauxXDRV.Mod = fauxXDRV.Set
 fauxXDRV.mod = fauxXDRV.Mod
@@ -597,6 +618,7 @@ function fauxXDRV.Ease(...)
     },
   })
 end
+
 fauxXDRV.ease = fauxXDRV.Ease
 
 function fauxXDRV.Load(filename)
@@ -615,6 +637,7 @@ function fauxXDRV.Load(filename)
   setfenv(f, env)
   f()
 end
+
 fauxXDRV.load = fauxXDRV.Load
 
 -- just to fix errors for unsupported stuff
@@ -682,7 +705,7 @@ local function getEnv()
   local env = merge(safeEnv, {
     xdrv = setmetatable(xdrv, xdrv),
     print = function(...)
-      local args = {...}
+      local args = { ... }
       local strings = {}
       for k, v in pairs(args) do
         strings[k] = tostring(v)
@@ -704,7 +727,7 @@ function self.bakeEases()
   lastBeat = 9e9
   if chart.loadedScripts[chart.metadata.modfilePath] then
     local path = chart.metadata.modfilePath -- must be an upvalue
-    local traceback = debug.traceback -- also must be an upvalue
+    local traceback = debug.traceback       -- also must be an upvalue
     local trace, err
     sandbox.run(function()
       xpcall(function()
@@ -737,7 +760,8 @@ function self.bakeEases()
         if DEBUG_SCRIPTS then
           local filename = 'debug_' .. name
           love.filesystem.write(filename, chart.loadedScripts[name])
-          os.execute('code --goto "' .. love.filesystem.getRealDirectory(filename) .. '/' .. filename .. ':' .. line .. '"')
+          os.execute('code --goto "' ..
+          love.filesystem.getRealDirectory(filename) .. '/' .. filename .. ':' .. line .. '"')
         end
       else
         logs.warn('Error evaluating script: ' .. err)

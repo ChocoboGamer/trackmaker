@@ -48,7 +48,8 @@ function CatjamWidget:click(x, y, button)
   local entries = {}
 
   for _, jam in ipairs(JAMMERS) do
-    table.insert(entries, { jam.name, function() self.jammer = jam end, toggle = true, value = self.jammer.name == jam.name })
+    table.insert(entries,
+      { jam.name, function() self.jammer = jam end, toggle = true, value = self.jammer.name == jam.name })
   end
 
   table.insert(entries, {})

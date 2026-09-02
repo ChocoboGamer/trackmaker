@@ -1,9 +1,9 @@
-local Container = require 'src.ui.container'
-local Button    = require 'src.ui.button'
-local Checkmark = require 'src.ui.checkmark'
-local Label     = require 'src.ui.label'
-local Textfield = require 'src.ui.textfield'
-local UIWidget  = require 'src.widgets.ui'
+local Container       = require 'src.ui.container'
+local Button          = require 'src.ui.button'
+local Checkmark       = require 'src.ui.checkmark'
+local Label           = require 'src.ui.label'
+local Textfield       = require 'src.ui.textfield'
+local UIWidget        = require 'src.widgets.ui'
 
 ---@class EventEditWidget : UIWidget
 local EventEditWidget = UIWidget:extend()
@@ -43,13 +43,13 @@ local eventFields = {
   timeSignature = { 'arr', {
     { 'number', nil, '/' },
     { 'number', nil, nil },
-  }},
+  } },
   comboTicks = { 'number', nil, 'x' },
   label = { 'string', nil, nil },
   fake = { 'arr', {
     { 'number', nil, 'Beats' },
     { 'number', nil, 'Column' },
-  }},
+  } },
   measureLine = { 'number', nil, 'Lane' },
 }
 
@@ -64,14 +64,20 @@ function EventEditWidget:getRows(field, store)
   if t == 'number' then
     return {
       {
-        Textfield(0, 0, 40, tostring(store[1]), function(value) store[1] = tonumber(value) self:updateFields() end),
+        Textfield(0, 0, 40, tostring(store[1]), function(value)
+          store[1] = tonumber(value)
+          self:updateFields()
+        end),
         field[3] and Label(0, 0, field[3]) or nil,
       }
     }
   elseif t == 'string' then
     return {
       {
-        Textfield(0, 0, 140, store[1], function(value) store[1] = value self:updateFields() end),
+        Textfield(0, 0, 140, store[1], function(value)
+          store[1] = value
+          self:updateFields()
+        end),
         field[3] and Label(0, 0, field[3]) or nil,
       }
     }
@@ -105,9 +111,11 @@ function EventEditWidget:getStore(field, store)
     return res
   end
 end
+
 function EventEditWidget:updateFields()
   self.editEvent[self.type] = self:getStore()
 end
+
 function EventEditWidget:fillStore(obj)
   obj = obj or self.editEvent[self.type]
 
@@ -140,8 +148,14 @@ function EventEditWidget:getContainer()
   end
 
   table.insert(rows, {
-    Button(40, 10, 'Save', function() self:place(true) self.delete = true end),
-    Button(40, 10, 'Delete', function() self:place(false) self.delete = true end),
+    Button(40, 10, 'Save', function()
+      self:place(true)
+      self.delete = true
+    end),
+    Button(40, 10, 'Delete', function()
+      self:place(false)
+      self.delete = true
+    end),
   })
 
   return Container(Container.placeRows(rows, self.width))

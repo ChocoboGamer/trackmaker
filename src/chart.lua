@@ -1,4 +1,4 @@
-local self = {}
+local self           = {}
 
 local xdrv           = require 'lib.xdrv'
 local conductor      = require 'src.conductor'
@@ -6,23 +6,23 @@ local logs           = require 'src.logs'
 local config         = require 'src.config'
 local filesystem     = require 'src.filesystem'
 local sm             = require 'lib.sm'
-sm.print = function(s) logs.logFile('sm.lua: ' .. tostring(s)) end
+sm.print             = function(s) logs.logFile('sm.lua: ' .. tostring(s)) end
 local ImportSMWidget = require 'src.widgets.importsm'
 local widgets        = require 'src.widgets'
 local exxdriver      = require 'src.exxdriver'
 local sort           = require 'lib.sort'
 
-self.loaded = false
+self.loaded          = false
 ---@type table<string, string>
-self.loadedScripts = {}
+self.loadedScripts   = {}
 ---@type XDRVThing[]
-self.chart = nil
+self.chart           = nil
 ---@type XDRVMetadata
-self.metadata = nil
+self.metadata        = nil
 ---@type string?
-self.chartDir = nil
+self.chartDir        = nil
 ---@type string?
-self.chartLocation = nil
+self.chartLocation   = nil
 
 local function updateTitle()
   if self.loaded then
@@ -51,6 +51,7 @@ function self.clearHistory()
   self.savedAtHistoryIndex = 1
   self.future = {}
 end
+
 function self.insertHistory(message)
   table.insert(self.history, {
     message = message,
@@ -100,6 +101,7 @@ function self.undo()
 
   return top
 end
+
 ---@return Memory?
 function self.redo()
   local top = table.remove(self.future, 1)
@@ -126,7 +128,8 @@ function self.markDirty()
 end
 
 function self.diffMark()
-  return '[' .. xdrv.formatDifficultyShort(self.metadata.chartDifficulty) .. lpad(tostring(self.metadata.chartLevel), 2, '0') .. ']'
+  return '[' ..
+  xdrv.formatDifficultyShort(self.metadata.chartDifficulty) .. lpad(tostring(self.metadata.chartLevel), 2, '0') .. ']'
 end
 
 function self.sort()
@@ -143,7 +146,7 @@ function self.sort()
   -- this seems ideal for us, as the sort call here is mostly a sanity check.
   -- it's called on nearly every operation editing the chart, so having it be
   -- fast for at least most of the time is preferable
-  sort.insertion_sort(self.chart, function (a, b) return a and b and a.beat < b.beat end)
+  sort.insertion_sort(self.chart, function(a, b) return a and b and a.beat < b.beat end)
 end
 
 function self.ensureInitialBPM()
@@ -187,7 +190,8 @@ function self.tryLoadScript(filepath)
   -- moonscript / luajit syntax inconsistency fix
   -- VERY HACKY and AWFUL and etc etc
   if string.find(content, '%)%s*\n%s*%(') then
-    logs.warn('Script uses ambiguous syntax (function call x new statement) supported by MoonScript but unsupported by LuaJIT.')
+    logs.warn(
+    'Script uses ambiguous syntax (function call x new statement) supported by MoonScript but unsupported by LuaJIT.')
     logs.warn('I will try my best to transform the script into something functional.')
     logs.warn('The result will be logged to the console and log file')
 
@@ -256,7 +260,8 @@ function self.openData(loaded, filepath, anonymous)
 
   events.onChartLoad()
 
-  logs.log('Loaded chart ' .. (self.metadata.musicTitle or self.metadata.musicAudio or filepath) .. ' ' .. self.diffMark())
+  logs.log('Loaded chart ' ..
+  (self.metadata.musicTitle or self.metadata.musicAudio or filepath) .. ' ' .. self.diffMark())
   config.appendRecent(filepath)
   config.save()
 end
@@ -305,50 +310,50 @@ local styleMappings = {
   -- Lasdl;"R<>
   [1] = {
     [0] = { 'gearShift', xdrv.XDRVLane.Left },
-    [1] = { 'note',      1 },
-    [2] = { 'note',      2 },
-    [3] = { 'note',      3 },
-    [4] = { 'note',      4 },
-    [5] = { 'note',      5 },
-    [6] = { 'note',      6 },
+    [1] = { 'note', 1 },
+    [2] = { 'note', 2 },
+    [3] = { 'note', 3 },
+    [4] = { 'note', 4 },
+    [5] = { 'note', 5 },
+    [6] = { 'note', 6 },
     [7] = { 'gearShift', xdrv.XDRVLane.Right },
-    [8] = { 'drift',     xdrv.XDRVDriftDirection.Left },
-    [9] = { 'drift',     xdrv.XDRVDriftDirection.Right },
+    [8] = { 'drift', xdrv.XDRVDriftDirection.Left },
+    [9] = { 'drift', xdrv.XDRVDriftDirection.Right },
   },
   -- <Lasdl;"R>
   [2] = {
-    [0] = { 'drift',     xdrv.XDRVDriftDirection.Left },
+    [0] = { 'drift', xdrv.XDRVDriftDirection.Left },
     [1] = { 'gearShift', xdrv.XDRVLane.Left },
-    [2] = { 'note',      1 },
-    [3] = { 'note',      2 },
-    [4] = { 'note',      3 },
-    [5] = { 'note',      4 },
-    [6] = { 'note',      5 },
-    [7] = { 'note',      6 },
+    [2] = { 'note', 1 },
+    [3] = { 'note', 2 },
+    [4] = { 'note', 3 },
+    [5] = { 'note', 4 },
+    [6] = { 'note', 5 },
+    [7] = { 'note', 6 },
     [8] = { 'gearShift', xdrv.XDRVLane.Right },
-    [9] = { 'drift',     xdrv.XDRVDriftDirection.Right },
+    [9] = { 'drift', xdrv.XDRVDriftDirection.Right },
   },
   -- asdl;"LR<>
   [3] = {
-    [0] = { 'note',      1 },
-    [1] = { 'note',      2 },
-    [2] = { 'note',      3 },
-    [3] = { 'note',      4 },
-    [4] = { 'note',      5 },
-    [5] = { 'note',      6 },
+    [0] = { 'note', 1 },
+    [1] = { 'note', 2 },
+    [2] = { 'note', 3 },
+    [3] = { 'note', 4 },
+    [4] = { 'note', 5 },
+    [5] = { 'note', 6 },
     [6] = { 'gearShift', xdrv.XDRVLane.Left },
     [7] = { 'gearShift', xdrv.XDRVLane.Right },
-    [8] = { 'drift',     xdrv.XDRVDriftDirection.Left },
-    [9] = { 'drift',     xdrv.XDRVDriftDirection.Right },
+    [8] = { 'drift', xdrv.XDRVDriftDirection.Left },
+    [9] = { 'drift', xdrv.XDRVDriftDirection.Right },
   },
   -- asdl;"LRD
   [4] = {
-    [0] = { 'note',      1 },
-    [1] = { 'note',      2 },
-    [2] = { 'note',      3 },
-    [3] = { 'note',      4 },
-    [4] = { 'note',      5 },
-    [5] = { 'note',      6 },
+    [0] = { 'note', 1 },
+    [1] = { 'note', 2 },
+    [2] = { 'note', 3 },
+    [3] = { 'note', 4 },
+    [4] = { 'note', 5 },
+    [5] = { 'note', 6 },
     [6] = { 'gearShift', xdrv.XDRVLane.Left },
     [7] = { 'gearShift', xdrv.XDRVLane.Right },
     [8] = { 'driftRolls' },
@@ -566,6 +571,7 @@ function self.findThing(thing)
     end
   end
 end
+
 ---@param beat number
 ---@param type string
 ---@return number?
@@ -642,7 +648,7 @@ function self.quickSave()
     self.saveChart()
   else
     save(self.chartLocation)
-    shouldQuitOnSave = false 
+    shouldQuitOnSave = false
   end
 end
 
@@ -655,6 +661,7 @@ function self.triggerAutosave()
   save(self.chartLocation .. '.auto', true)
   autosaveTimer = math.max(autosaveTimer - AUTOSAVE_INTERVAL, 0)
 end
+
 function self.update(dt)
   if not (self.isDirty() and self.chart and self.chartLocation) then
     autosaveTimer = 0

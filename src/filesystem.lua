@@ -4,7 +4,7 @@ local self = {}
 -- https://love2d.org/forums/viewtopic.php?t=86149
 if MACOS then
   local base = love.filesystem.getSourceBaseDirectory()
-  package.preload['nfd'] = package.loadlib(base..'/nfd.so', 'luaopen_nfd')
+  package.preload['nfd'] = package.loadlib(base .. '/nfd.so', 'luaopen_nfd')
 end
 
 local success, nfd = pcall(require, 'nfd')
@@ -93,7 +93,6 @@ function self.saveDialog(path, filter, callback)
       ]]
 
       return threads.createStartWithCallback(code, callback, path, filter)
-
     else
       callback(nfd.save(filter, path))
 

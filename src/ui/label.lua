@@ -26,6 +26,7 @@ function Label:setAlign(align)
   self.align = align
   self:updateText()
 end
+
 ---@param n number | nil
 function Label:setWrapWidth(n)
   self.wrapWidth = n
@@ -46,7 +47,7 @@ function Label:draw()
   love.graphics.setColor(colors.text:unpack())
   local x = 0
   if self.wrapWidth then
-    x = x - self.wrapWidth/2 + self.width/2
+    x = x - self.wrapWidth / 2 + self.width / 2
   end
   love.graphics.draw(self.textObj, math.floor(x), 0)
 end

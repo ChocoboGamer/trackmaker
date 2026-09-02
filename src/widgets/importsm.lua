@@ -1,10 +1,10 @@
-local Container = require 'src.ui.container'
-local Button    = require 'src.ui.button'
-local Checkmark = require 'src.ui.checkmark'
-local Label     = require 'src.ui.label'
-local Textfield = require 'src.ui.textfield'
-local Select    = require 'src.ui.select'
-local UIWidget  = require 'src.widgets.ui'
+local Container      = require 'src.ui.container'
+local Button         = require 'src.ui.button'
+local Checkmark      = require 'src.ui.checkmark'
+local Label          = require 'src.ui.label'
+local Textfield      = require 'src.ui.textfield'
+local Select         = require 'src.ui.select'
+local UIWidget       = require 'src.widgets.ui'
 
 ---@class ImportSMWidget : UIWidget
 local ImportSMWidget = UIWidget:extend()
@@ -52,7 +52,8 @@ function ImportSMWidget:getContainer()
       Checkmark(0, 0, function() self:setStyle(1) end, self.styleIdx == 1, noNotes), Label(0, 0, 'Lasdl;"R<>')
     },
     {
-      Checkmark(0, 0, function() self:setStyle(2) end, self.styleIdx == 2, noNotes), Label(0, 0, '<Lasdl;"R>' .. ((chart and chart.type == 'xdrv') and ' (Detected)' or ''))
+      Checkmark(0, 0, function() self:setStyle(2) end, self.styleIdx == 2, noNotes), Label(0, 0,
+      '<Lasdl;"R>' .. ((chart and chart.type == 'xdrv') and ' (Detected)' or ''))
     },
     {
       Checkmark(0, 0, function() self:setStyle(3) end, self.styleIdx == 3, noNotes), Label(0, 0, 'asdl;"LR<>')
@@ -61,7 +62,8 @@ function ImportSMWidget:getContainer()
       Checkmark(0, 0, function() self:setStyle(4) end, self.styleIdx == 4, noNotes), Label(0, 0, 'asdl;"LRD (XDRVAV)')
     } or {},
     {
-      Label(0, 0, noNotes and 'No notes' or (#self.chart.NOTES[self.chartIdx].notes) .. ' notes'), Button(0, 0, 'Import', function() self:finish() end)
+      Label(0, 0, noNotes and 'No notes' or (#self.chart.NOTES[self.chartIdx].notes) .. ' notes'), Button(0, 0, 'Import',
+      function() self:finish() end)
     },
   }))
 end

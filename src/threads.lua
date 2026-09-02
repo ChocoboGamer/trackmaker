@@ -8,7 +8,7 @@ function threadHandler.createStartWithCallback(threadCode, callback, ...)
   local thread = love.thread.newThread(threadCode)
   local channel = love.timer.getTime()
 
-  threadHandler._threads[channel] = {thread = thread, callback = callback, channel = channel}
+  threadHandler._threads[channel] = { thread = thread, callback = callback, channel = channel }
   thread:start(channel, ...)
 
   return channel, thread

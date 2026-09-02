@@ -1,25 +1,25 @@
-local Node      = require 'src.ui.node'
-local Container = require 'src.ui.container'
-local Button    = require 'src.ui.button'
-local Label     = require 'src.ui.label'
-local Textfield = require 'src.ui.textfield'
-local Select    = require 'src.ui.select'
-local Checkmark = require 'src.ui.checkmark'
-local UIWidget  = require 'src.widgets.ui'
-local conductor = require 'src.conductor'
+local Node                = require 'src.ui.node'
+local Container           = require 'src.ui.container'
+local Button              = require 'src.ui.button'
+local Label               = require 'src.ui.label'
+local Textfield           = require 'src.ui.textfield'
+local Select              = require 'src.ui.select'
+local Checkmark           = require 'src.ui.checkmark'
+local UIWidget            = require 'src.widgets.ui'
+local conductor           = require 'src.conductor'
 local ChartSettingsWidget = require 'src.widgets.chartsettings'
 
-local logs      = require 'src.logs'
-local colors    = require 'src.colors'
+local logs                = require 'src.logs'
+local colors              = require 'src.colors'
 
 ---@class MetadataWidget : UIWidget
-local MetadataWidget = UIWidget:extend()
+local MetadataWidget      = UIWidget:extend()
 
-local WIDTH = 300
-local HEIGHT = 660
+local WIDTH               = 300
+local HEIGHT              = 660
 
 ---@class JacketPreview : Node
-local JacketPreview = Node:extend()
+local JacketPreview       = Node:extend()
 
 ---@param size number
 ---@param image love.Image?
@@ -30,6 +30,7 @@ function JacketPreview:new(size, image)
   self.height = size
   self.image = image
 end
+
 function JacketPreview:draw()
   love.graphics.setColor(colors.element:unpack())
   love.graphics.rectangle('fill', 0, 0, self.width, self.height)
@@ -68,54 +69,54 @@ function MetadataWidget:getContainer()
   local charterField = {}
   if #metadata.chartAuthors > 0 then
     charterField =
-      { Label(0, 0, 'Charters'), { Textfield(0, 0, 100, table.concat(metadata.chartAuthors, ', '), function(value)
-        chart.metadata.chartAuthors = splitStr(value)
-        chart.markDirty()
-      end), } }
+    { Label(0, 0, 'Charters'), { Textfield(0, 0, 100, table.concat(metadata.chartAuthors, ', '), function(value)
+      chart.metadata.chartAuthors = splitStr(value)
+      chart.markDirty()
+    end), } }
   else
     charterField =
-      { Label(0, 0, 'Charter'), { Textfield(0, 0, 100, metadata.chartAuthor or '', function(value)
-        chart.metadata.chartAuthor = value
-        chart.markDirty()
-      end) } }
+    { Label(0, 0, 'Charter'), { Textfield(0, 0, 100, metadata.chartAuthor or '', function(value)
+      chart.metadata.chartAuthor = value
+      chart.markDirty()
+    end) } }
   end
   local modAuthorField = {}
   if #metadata.modAuthors > 0 then
     modAuthorField =
-      { Label(0, 0, 'Mod Authors'), { Textfield(0, 0, 100, table.concat(metadata.modAuthors, ', '), function(value)
-        chart.metadata.modAuthors = splitStr(value)
-        chart.markDirty()
-      end), } }
+    { Label(0, 0, 'Mod Authors'), { Textfield(0, 0, 100, table.concat(metadata.modAuthors, ', '), function(value)
+      chart.metadata.modAuthors = splitStr(value)
+      chart.markDirty()
+    end), } }
   else
     modAuthorField =
-      { Label(0, 0, 'Mod Author'), { Textfield(0, 0, 100, metadata.modAuthor or '', function(value)
-        chart.metadata.modAuthor = value
-        chart.markDirty()
-      end) } }
+    { Label(0, 0, 'Mod Author'), { Textfield(0, 0, 100, metadata.modAuthor or '', function(value)
+      chart.metadata.modAuthor = value
+      chart.markDirty()
+    end) } }
   end
 
   local elems = Container.placeFormLike({
-    { Label(0, 0, 'Title'),   { Textfield(0, 0, 100, metadata.musicTitle or '',  function(value)
+    { Label(0, 0, 'Title'), { Textfield(0, 0, 100, metadata.musicTitle or '', function(value)
       chart.metadata.musicTitle = value
       chart.markDirty()
     end), } },
-    { Label(0, 0, 'Subtitle'),   { Textfield(0, 0, 100, metadata.subtitle or '',  function(value)
+    { Label(0, 0, 'Subtitle'), { Textfield(0, 0, 100, metadata.subtitle or '', function(value)
       chart.metadata.subtitle = value
       chart.markDirty()
     end), } },
-    { Label(0, 0, 'Artist'),  { Textfield(0, 0, 100, metadata.musicArtist or '', function(value)
+    { Label(0, 0, 'Artist'), { Textfield(0, 0, 100, metadata.musicArtist or '', function(value)
       chart.metadata.musicArtist = value
       chart.markDirty()
     end), } },
     charterField, modAuthorField,
-    { Label(0, 0, 'Music'),   { Textfield(0, 0, 100, metadata.musicAudio or '', function(value)
+    { Label(0, 0, 'Music'), { Textfield(0, 0, 100, metadata.musicAudio or '', function(value)
       chart.metadata.musicAudio = value
       if chart.chartDir then
         conductor.loadSong(chart.chartDir .. chart.metadata.musicAudio)
       end
       chart.markDirty()
     end), } },
-    { Label(0, 0, 'Jacket'),  { Textfield(0, 0, 100, metadata.jacketImage or '', function(value)
+    { Label(0, 0, 'Jacket'), { Textfield(0, 0, 100, metadata.jacketImage or '', function(value)
       chart.metadata.jacketImage = value
       self:updateJacket()
       self.container = self:getContainer()
@@ -137,7 +138,7 @@ function MetadataWidget:getContainer()
         chart.markDirty()
       end, (metadata.chartDifficulty or 0) + 1),
     } },
-    { Label(0, 0, 'Level'),   { Textfield(0, 0, 100, tostring(metadata.chartLevel or 0), function(value)
+    { Label(0, 0, 'Level'), { Textfield(0, 0, 100, tostring(metadata.chartLevel or 0), function(value)
       chart.metadata.chartLevel = tonumber(value)
       chart.markDirty()
     end), } },

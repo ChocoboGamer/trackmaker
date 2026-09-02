@@ -311,9 +311,11 @@ function meta.setScheme(key)
   mergeOver(scheme, base)
   mergeOver(scheme, newScheme)
 end
+
 function meta.getSchemes()
   return schemes
 end
+
 function meta.getScheme()
   return schemeName
 end

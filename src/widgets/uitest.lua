@@ -1,11 +1,11 @@
-local Container = require 'src.ui.container'
-local Button    = require 'src.ui.button'
-local Checkmark = require 'src.ui.checkmark'
-local Label     = require 'src.ui.label'
-local Textfield = require 'src.ui.textfield'
-local UIWidget  = require 'src.widgets.ui'
+local Container    = require 'src.ui.container'
+local Button       = require 'src.ui.button'
+local Checkmark    = require 'src.ui.checkmark'
+local Label        = require 'src.ui.label'
+local Textfield    = require 'src.ui.textfield'
+local UIWidget     = require 'src.widgets.ui'
 
-local logs      = require 'src.logs'
+local logs         = require 'src.logs'
 
 ---@class UITestWidget : UIWidget
 local UITestWidget = UIWidget:extend()

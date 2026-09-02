@@ -1,7 +1,7 @@
 local edit   = require 'src.edit'
 local logs   = require 'src.logs'
 local config = require 'src.config'
-local self = {}
+local self   = {}
 
 ---@class Keybind
 ---@field ctrl boolean? @ cmd on Mac
@@ -17,7 +17,7 @@ local self = {}
 ---@field trigger fun()?
 
 ---@type table<string, Keybind>
-self.binds = {
+self.binds   = {
   new = {
     name = 'New',
     ctrl = true,

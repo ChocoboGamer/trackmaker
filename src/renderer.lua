@@ -1,35 +1,35 @@
-local self = {}
+local self                   = {}
 
-local deep = require 'lib.deep'
-local easable = require 'lib.easable'
-local cpml = require 'lib.cpml'
+local deep                   = require 'lib.deep'
+local easable                = require 'lib.easable'
+local cpml                   = require 'lib.cpml'
 
-local preview    = require 'src.preview'
-local waveform   = require 'src.waveform'
-local conductor  = require 'src.conductor'
-local xdrv       = require 'lib.xdrv'
-local edit       = require 'src.edit'
-local logs       = require 'src.logs'
-local xdrvColors = require 'src.xdrvcolors'
-local config     = require 'src.config'
+local preview                = require 'src.preview'
+local waveform               = require 'src.waveform'
+local conductor              = require 'src.conductor'
+local xdrv                   = require 'lib.xdrv'
+local edit                   = require 'src.edit'
+local logs                   = require 'src.logs'
+local xdrvColors             = require 'src.xdrvcolors'
+local config                 = require 'src.config'
 
 local CheckpointPromptWidget = require 'src.widgets.checkpointprompt'
 local EventEditWidget        = require 'src.widgets.eventedit'
 local ContextWidget          = require 'src.widgets.context'
 
-local layer = deep:new()
+local layer                  = deep:new()
 
-local BASE_SCALE = 55
-local NOTE_WIDTH = (3.336 * 0.25) * BASE_SCALE
-local NOTE_HEIGHT = NOTE_WIDTH * (0.25 / 0.75)
-local GAP_WIDTH = (4 * BASE_SCALE - NOTE_WIDTH * 1.5)/2
+local BASE_SCALE             = 55
+local NOTE_WIDTH             = (3.336 * 0.25) * BASE_SCALE
+local NOTE_HEIGHT            = NOTE_WIDTH * (0.25 / 0.75)
+local GAP_WIDTH              = (4 * BASE_SCALE - NOTE_WIDTH * 1.5) / 2
 
-local CANVAS_PAD = 16 -- on each side
+local CANVAS_PAD             = 16 -- on each side
 local canvas3d
 
 local function getPadBottom()
   if config.config.previewMode then
-    return canvas3d:getHeight()/2 - 4 * BASE_SCALE
+    return canvas3d:getHeight() / 2 - 4 * BASE_SCALE
   else
     return 200
   end
@@ -64,9 +64,9 @@ self.getScaledScrollSpeed = getScaledScrollSpeed
 
 local function getColumnX(i)
   if i < 4 then
-    return -GAP_WIDTH/2 - NOTE_WIDTH * (3 - i + 0.5)
+    return -GAP_WIDTH / 2 - NOTE_WIDTH * (3 - i + 0.5)
   else
-    return GAP_WIDTH/2 + NOTE_WIDTH * (i - 3 - 0.5)
+    return GAP_WIDTH / 2 + NOTE_WIDTH * (i - 3 - 0.5)
   end
 end
 
@@ -100,9 +100,11 @@ self.getColumnColor = getColumnColor
 ---@param sh number?
 local function beatToY(b, sh)
   if config.config.cmod then
-    return (sh or love.graphics.getHeight()) - getPadBottom() - (conductor.timeAtBeat(b) - conductor.time) * getScaledScrollSpeed() * BASE_SCALE
+    return (sh or love.graphics.getHeight()) - getPadBottom() -
+    (conductor.timeAtBeat(b) - conductor.time) * getScaledScrollSpeed() * BASE_SCALE
   else
-    return (sh or love.graphics.getHeight()) - getPadBottom() - (b - conductor.beat) * getScaledScrollSpeed() * BASE_SCALE
+    return (sh or love.graphics.getHeight()) - getPadBottom() -
+    (b - conductor.beat) * getScaledScrollSpeed() * BASE_SCALE
   end
 end
 self.beatToY = beatToY
@@ -110,21 +112,23 @@ self.beatToY = beatToY
 ---@param sh number?
 local function yToBeat(y, sh)
   if config.config.cmod then
-    return conductor.beatAtTime(((sh or love.graphics.getHeight()) - getPadBottom() - y) / getScaledScrollSpeed() / BASE_SCALE) + conductor.beat
+    return conductor.beatAtTime(((sh or love.graphics.getHeight()) - getPadBottom() - y) / getScaledScrollSpeed() /
+    BASE_SCALE) + conductor.beat
   else
-    return ((sh or love.graphics.getHeight()) - getPadBottom() - y) / getScaledScrollSpeed() / BASE_SCALE + conductor.beat
+    return ((sh or love.graphics.getHeight()) - getPadBottom() - y) / getScaledScrollSpeed() / BASE_SCALE +
+    conductor.beat
   end
 end
 self.yToBeat = yToBeat
 
 local function getLeft()
-  return (-GAP_WIDTH/2 - NOTE_WIDTH * 3) * scale()
+  return (-GAP_WIDTH / 2 - NOTE_WIDTH * 3) * scale()
 end
 local function getRight()
   return -getLeft()
 end
 local function getMLeft()
-  return -GAP_WIDTH/2 * scale()
+  return -GAP_WIDTH / 2 * scale()
 end
 local function getMRight()
   return -getMLeft()
@@ -147,14 +151,14 @@ local function drawNote(thing, sh)
     love.graphics.setLineWidth(6)
     local width = NOTE_WIDTH * scale() * sx * 0.6
     local height = NOTE_WIDTH * scale() * sy * 0.6
-    love.graphics.ellipse('line', x, y, width/2, height/2)
+    love.graphics.ellipse('line', x, y, width / 2, height / 2)
     love.graphics.setLineWidth(1)
   else
     local width = NOTE_WIDTH * scale() * 0.95 * sx
     local height = NOTE_HEIGHT * sy
 
     love.graphics.setColor(getColumnColor(note.column):unpack())
-    love.graphics.rectangle('fill', x - width/2, y - (height/2) * scale(), width, height * scale(), 1, 1)
+    love.graphics.rectangle('fill', x - width / 2, y - (height / 2) * scale(), width, height * scale(), 1, 1)
   end
 end
 local function drawHoldTail(thing, sh)
@@ -178,13 +182,13 @@ local function drawHoldTail(thing, sh)
 
   love.graphics.setColor((getColumnColor(note.column) * 0.5):unpack())
   local width = NOTE_WIDTH * scale() * 0.95 * 0.9
-  love.graphics.rectangle('fill', x - width/2, yEnd, width, y - yEnd)
+  love.graphics.rectangle('fill', x - width / 2, yEnd, width, y - yEnd)
 end
 
 local checkTex = love.graphics.newImage('assets/sprites/check.png')
 
 local function canPlaceCheckpoint(x, y)
-  if x > (love.graphics.getWidth()/2 - GAP_WIDTH/2 - NOTE_WIDTH * 3 - 52) or x < (love.graphics.getWidth()/2 - GAP_WIDTH/2 - NOTE_WIDTH * 3 - 52 - 32) then return end
+  if x > (love.graphics.getWidth() / 2 - GAP_WIDTH / 2 - NOTE_WIDTH * 3 - 52) or x < (love.graphics.getWidth() / 2 - GAP_WIDTH / 2 - NOTE_WIDTH * 3 - 52 - 32) then return end
 
   local closest = quantize(yToBeat(y), edit.quantIndex)
   local closestY = beatToY(closest)
@@ -208,29 +212,31 @@ local function drawCheckpoint(thing, sh)
   if y > (sh + 64) then return end
 
   local size = 12 / checkTex:getHeight() * scale()
-  local x = (-GAP_WIDTH/2 - NOTE_WIDTH * 3 - 52) * scale()
+  local x = (-GAP_WIDTH / 2 - NOTE_WIDTH * 3 - 52) * scale()
   local width = size * checkTex:getWidth()
   love.graphics.setColor(1, 1, 1, renderTransparent and 0.3 or 1)
-  love.graphics.draw(checkTex, x, y, 0, size, size, checkTex:getWidth(), checkTex:getHeight()/2)
+  love.graphics.draw(checkTex, x, y, 0, size, size, checkTex:getWidth(), checkTex:getHeight() / 2)
   if check then
     love.graphics.setColor(1, 1, 1, 1)
     love.graphics.setFont(fonts.inter_16)
-    love.graphics.printf(check, math.floor(x - 8 - width - 256), math.floor(y - fonts.inter_16:getHeight()/2 + 8), 256, 'right')
+    love.graphics.printf(check, math.floor(x - 8 - width - 256), math.floor(y - fonts.inter_16:getHeight() / 2 + 8), 256,
+      'right')
     love.graphics.setColor(1, 1, 1, 0.5)
     love.graphics.setFont(fonts.inter_12)
-    love.graphics.printf('Checkpoint', math.floor(x - 8 - width - 256), math.floor(y - fonts.inter_12:getHeight()/2 - 8), 256, 'right')
+    love.graphics.printf('Checkpoint', math.floor(x - 8 - width - 256), math.floor(y - fonts.inter_12:getHeight() / 2 - 8),
+      256, 'right')
   end
 end
 
 local gearshiftMesh = love.graphics.newMesh({
-  { 0,    0, 0, 0, 1, 1, 1, 1 },
-  { 0,    1, 0, 0, 1, 1, 1, 1 },
-  { 0.2,  0, 0, 0, 1, 1, 1, 0 },
-  { 0.2,  1, 0, 0, 1, 1, 1, 0 },
-  { 0.8,  0, 0, 0, 1, 1, 1, 0 },
-  { 0.8,  1, 0, 0, 1, 1, 1, 0 },
-  { 1,    0, 0, 0, 1, 1, 1, 1 },
-  { 1,    1, 0, 0, 1, 1, 1, 1 },
+  { 0,   0, 0, 0, 1, 1, 1, 1 },
+  { 0,   1, 0, 0, 1, 1, 1, 1 },
+  { 0.2, 0, 0, 0, 1, 1, 1, 0 },
+  { 0.2, 1, 0, 0, 1, 1, 1, 0 },
+  { 0.8, 0, 0, 0, 1, 1, 1, 0 },
+  { 0.8, 1, 0, 0, 1, 1, 1, 0 },
+  { 1,   0, 0, 0, 1, 1, 1, 1 },
+  { 1,   1, 0, 0, 1, 1, 1, 1 },
 }, 'strip', 'static')
 
 local function drawGearShift(thing, sh)
@@ -256,7 +262,7 @@ local function drawGearShift(thing, sh)
   if math.max(y, yEnd) < -NOTE_HEIGHT then return -1 end
   if math.min(y, yEnd) > (sh + NOTE_HEIGHT) then return end
 
-  local x = (GAP_WIDTH/2) * offset * scale()
+  local x = (GAP_WIDTH / 2) * offset * scale()
   local width = NOTE_WIDTH * 3 * offset * scale()
 
   love.graphics.setColor(color:alpha(0.3):unpack())
@@ -299,8 +305,8 @@ local DRIFT_SPACING = 1
 
 ---@param dir XDRVDriftDirection
 local function driftX(dir)
-  if dir == xdrv.XDRVDriftDirection.Left    then return -1 end
-  if dir == xdrv.XDRVDriftDirection.Right   then return 1  end
+  if dir == xdrv.XDRVDriftDirection.Left then return -1 end
+  if dir == xdrv.XDRVDriftDirection.Right then return 1 end
   return 0
 end
 
@@ -346,8 +352,9 @@ local function drawDrift(thing, prevEvent, sh)
     local y = beatToY(b, sh)
     if not (config.config.previewMode and conductor.beat > b) then
       love.graphics.setColor(1, 1, 1, (1 - a) * 0.4)
-      for x = -baseX, baseX, baseX*2 do
-        love.graphics.draw(driftTex, x + d * NOTE_WIDTH * scale(), y, 0, size / driftTex:getWidth(), size / driftTex:getHeight(), driftTex:getWidth()/2, driftTex:getHeight()/2)
+      for x = -baseX, baseX, baseX * 2 do
+        love.graphics.draw(driftTex, x + d * NOTE_WIDTH * scale(), y, 0, size / driftTex:getWidth(),
+          size / driftTex:getHeight(), driftTex:getWidth() / 2, driftTex:getHeight() / 2)
       end
     end
   end
@@ -357,8 +364,9 @@ local function drawDrift(thing, prevEvent, sh)
       local y = beatToY(b, sh)
       if not (config.config.previewMode and conductor.beat > b) then
         love.graphics.setColor(1, 1, 1, 0.4)
-        for x = -baseX, baseX, baseX*2 do
-          love.graphics.draw(driftTex, x + driftX(lastDir) * NOTE_WIDTH * scale(), y, 0, size / driftTex:getWidth(), size / driftTex:getHeight(), driftTex:getWidth()/2, driftTex:getHeight()/2)
+        for x = -baseX, baseX, baseX * 2 do
+          love.graphics.draw(driftTex, x + driftX(lastDir) * NOTE_WIDTH * scale(), y, 0, size / driftTex:getWidth(),
+            size / driftTex:getHeight(), driftTex:getWidth() / 2, driftTex:getHeight() / 2)
         end
       end
     end
@@ -450,26 +458,26 @@ for i = 1, 6 do
 end
 
 local laneMeshLeft = love.graphics.newMesh({
-  {'VertexPosition', 'float', 3}, -- introduce Z axis
-  {'VertexTexCoord', 'float', 2}, -- UVs
+  { 'VertexPosition', 'float', 3 }, -- introduce Z axis
+  { 'VertexTexCoord', 'float', 2 }, -- UVs
   -- ignore color
 }, {
   -- x, y, z, u, v
-  {-0.5, -0.5,  0, 0  , 1},
-  { 0  , -0.5,  0, 0.5, 1},
-  {-0.5,  0.5,  0, 0  , 0},
-  { 0  ,  0.5,  0, 0.5, 0},
+  { -0.5, -0.5, 0, 0,   1 },
+  { 0,    -0.5, 0, 0.5, 1 },
+  { -0.5, 0.5,  0, 0,   0 },
+  { 0,    0.5,  0, 0.5, 0 },
 }, 'strip', 'static')
 local laneMeshRight = love.graphics.newMesh({
-  {'VertexPosition', 'float', 3}, -- introduce Z axis
-  {'VertexTexCoord', 'float', 2}, -- UVs
+  { 'VertexPosition', 'float', 3 }, -- introduce Z axis
+  { 'VertexTexCoord', 'float', 2 }, -- UVs
   -- ignore color
 }, {
   -- x, y, z, u, v
-  { 0  , -0.5,  0, 0.5, 1},
-  { 0.5, -0.5,  0, 1  , 1},
-  { 0  ,  0.5,  0, 0.5, 0},
-  { 0.5,  0.5,  0, 1  , 0},
+  { 0,   -0.5, 0, 0.5, 1 },
+  { 0.5, -0.5, 0, 1,   1 },
+  { 0,   0.5,  0, 0.5, 0 },
+  { 0.5, 0.5,  0, 1,   0 },
 }, 'strip', 'static')
 
 local vertShader = love.graphics.newShader([[
@@ -546,7 +554,7 @@ function self.updateTimingEvents()
   if not chart.loaded then return end
 
   for _, thing in ipairs(chart.chart) do
-    local x = GAP_WIDTH/2 + NOTE_WIDTH * 3 + 52
+    local x = GAP_WIDTH / 2 + NOTE_WIDTH * 3 + 52
 
     local lastEvent = timingEvents[#timingEvents]
     if lastEvent and beatCmp(thing.beat, lastEvent.beat) then
@@ -694,13 +702,15 @@ function self.drawCanvas(static)
 
   if not chart.loaded then
     love.graphics.setColor(0.7, 0.7, 0.7, 1)
-    love.graphics.printf('No chart opened... (' .. keybinds.formatBind(keybinds.binds.open) .. ' to open)', 0, scy, sw, 'center')
+    love.graphics.printf('No chart opened... (' .. keybinds.formatBind(keybinds.binds.open) .. ' to open)', 0, scy, sw,
+      'center')
     return
   end
 
   if not config.config.view.chart then
     love.graphics.setColor(0.7, 0.7, 0.7, 1)
-    love.graphics.printf('You hid the chart. Congratulations?\nI\'m not sure what you were expecting to happen...', 0, scy, sw, 'center')
+    love.graphics.printf('You hid the chart. Congratulations?\nI\'m not sure what you were expecting to happen...', 0,
+      scy, sw, 'center')
     return
   end
 
@@ -722,7 +732,7 @@ function self.drawCanvas(static)
     love.graphics.setCanvas(canvas3d)
 
     sw, sh = canvas3d:getDimensions()
-    scx, scy = sw/2, sh/2
+    scx, scy = sw / 2, sh / 2
 
     love.graphics.clear(0, 0, 0, 0)
   end
@@ -764,7 +774,8 @@ function self.drawCanvas(static)
       love.graphics.setColor(0.6, 0.6, 0.6, 1)
       if b == nextMeasure then
         if not config.config.previewMode then
-          love.graphics.print(tostring(nextMeasureI), math.floor(getRight() + 16), math.floor(y - love.graphics.getFont():getHeight()/2))
+          love.graphics.print(tostring(nextMeasureI), math.floor(getRight() + 16),
+            math.floor(y - love.graphics.getFont():getHeight() / 2))
         end
         nextMeasureI = nextMeasureI + 1
         nextMeasure = conductor.measures[nextMeasureI]
@@ -791,7 +802,7 @@ function self.drawCanvas(static)
   love.graphics.setColor(SEP_COL:unpack())
   for o = -1, 1, 2 do
     for i = 1, 2 do
-      local x = o * (GAP_WIDTH/2 + NOTE_WIDTH * i) * scale()
+      local x = o * (GAP_WIDTH / 2 + NOTE_WIDTH * i) * scale()
       love.graphics.line(x, 0, x, sh - padBottom)
     end
   end
@@ -803,11 +814,11 @@ function self.drawCanvas(static)
   love.graphics.setLineWidth(sideW)
 
   love.graphics.setColor(xdrvColors.scheme.colors.LeftGear:alpha(0.5):unpack())
-  love.graphics.line(getLeft() + sideW/2, sh, getLeft() + sideW/2, 0)
-  love.graphics.line(getMLeft() - sideW/2, sh, getMLeft() - sideW/2, 0)
+  love.graphics.line(getLeft() + sideW / 2, sh, getLeft() + sideW / 2, 0)
+  love.graphics.line(getMLeft() - sideW / 2, sh, getMLeft() - sideW / 2, 0)
   love.graphics.setColor(xdrvColors.scheme.colors.RightGear:alpha(0.5):unpack())
-  love.graphics.line(getRight() - sideW/2, sh, getRight() - sideW/2, 0)
-  love.graphics.line(getMRight() + sideW/2, sh, getMRight() + sideW/2, 0)
+  love.graphics.line(getRight() - sideW / 2, sh, getRight() - sideW / 2, 0)
+  love.graphics.line(getMRight() + sideW / 2, sh, getMRight() + sideW / 2, 0)
 
   love.graphics.push()
   love.graphics.origin()
@@ -832,7 +843,8 @@ function self.drawCanvas(static)
       if y < (sh + waveHeight) then
         for channel = 1, 2 do
           local mult = (channel - 1) * 2 - 1
-          love.graphics.draw(wav[channel] or wav[1], sw/2 + getMRight() * mult, y, 0, (width * scale()) * mult, -waveHeight)
+          love.graphics.draw(wav[channel] or wav[1], sw / 2 + getMRight() * mult, y, 0, (width * scale()) * mult,
+            -waveHeight)
         end
       end
     end
@@ -843,7 +855,7 @@ function self.drawCanvas(static)
     for c = 1, 6 do
       local x = getColumnX(c)
       love.graphics.setColor(1, 1, 1, laneActive[c].eased * 0.45)
-      love.graphics.draw(laneGradMesh, (x - NOTE_WIDTH/2) * scale(), 32, 0, NOTE_WIDTH * scale(), (sh - 32) - padBottom)
+      love.graphics.draw(laneGradMesh, (x - NOTE_WIDTH / 2) * scale(), 32, 0, NOTE_WIDTH * scale(), (sh - 32) - padBottom)
     end
   end
 
@@ -853,7 +865,7 @@ function self.drawCanvas(static)
     if glyphs['key_' .. c] then
       local spr = glyphs['key_' .. c]
       local size = (NOTE_WIDTH * 0.92) / spr:getWidth() * scale()
-      love.graphics.draw(spr, x * scale(), sh - padBottom + NOTE_WIDTH * 0.08, 0, size * 0.8, size, spr:getWidth()/2, 0)
+      love.graphics.draw(spr, x * scale(), sh - padBottom + NOTE_WIDTH * 0.08, 0, size * 0.8, size, spr:getWidth() / 2, 0)
     end
   end
 
@@ -922,8 +934,10 @@ function self.drawCanvas(static)
 
     if not quantCol then
       love.graphics.setColor(0, 0, 0, 1)
-      love.graphics.printf(tostring(getDivision(edit.quantIndex)), getLeft() - 45, sh - padBottom - fonts.inter_12:getHeight()/2, 30, 'center')
-      love.graphics.printf(tostring(getDivision(edit.quantIndex)), getRight() + 15, sh - padBottom - fonts.inter_12:getHeight()/2, 30, 'center')
+      love.graphics.printf(tostring(getDivision(edit.quantIndex)), getLeft() - 45,
+        sh - padBottom - fonts.inter_12:getHeight() / 2, 30, 'center')
+      love.graphics.printf(tostring(getDivision(edit.quantIndex)), getRight() + 15,
+        sh - padBottom - fonts.inter_12:getHeight() / 2, 30, 'center')
     end
   end
 
@@ -955,17 +969,17 @@ function self.drawCanvas(static)
     local playfieldWidthU = (NOTE_WIDTH * 6 + GAP_WIDTH) / BASE_SCALE
     local canvasWidthU = playfieldWidthU - (CANVAS_PAD * 2) / BASE_SCALE
 
-    local modelScale = canvasWidthU/2
+    local modelScale = canvasWidthU / 2
     --local modelScale = 2
 
     local v = cpml.mat4.new().from_direction(cpml.vec3(0, 0, 1), cpml.vec3(0, 1, 0))
-    v:scale(v, {x = modelScale, y = modelScale / (ratio * 3.4), z = 1})
+    v:scale(v, { x = modelScale, y = modelScale / (ratio * 3.4), z = 1 })
 
     local originalPosition = cpml.vec3(0, 3.1, -4)
     -- why is the y and z swapped and mirrored?
     -- good question!
     local camPos = cpml.vec3(
-       preview.getModValue('camera_position_x'),
+      preview.getModValue('camera_position_x'),
       -preview.getModValue('camera_position_z') + 1,
       -preview.getModValue('camera_position_y') - 1)
     local originalRotation = cpml.vec3(math.rad(59), 0, 0)
@@ -976,14 +990,15 @@ function self.drawCanvas(static)
 
     local translate = originalPosition + camPos
     -- unsure of why i have to mess with the rotations here, but...
-    local rotation = eulerToQuaternion((cpml.vec3(math.pi/2, 0, 0) - (originalRotation + camRot)):unpack())
+    local rotation = eulerToQuaternion((cpml.vec3(math.pi / 2, 0, 0) - (originalRotation + camRot)):unpack())
 
     v:translate(v, translate)
     v = cpml.mat4.from_quaternion(rotation) * v
 
-    v:scale(v, {x = -1, y = -1, z = -1})
+    v:scale(v, { x = -1, y = -1, z = -1 })
 
-    local p = cpml.mat4().from_perspective(clamp(preview.getModValue('camera_fov'), 1, 179), love.graphics.getWidth() / love.graphics.getHeight(), 0.3, 1000.0)
+    local p = cpml.mat4().from_perspective(clamp(preview.getModValue('camera_fov'), 1, 179),
+      love.graphics.getWidth() / love.graphics.getHeight(), 0.3, 1000.0)
     p:scale(p, { x = 1, y = yMult, z = 1 })
 
     vertShader:send('viewMatrix', v:to_vec4s_cols())
@@ -991,16 +1006,16 @@ function self.drawCanvas(static)
 
     local m = cpml.mat4()
 
-    m:scale(m, {x = modelScale, y = modelScale / (ratio * 3.4), z = 1})
+    m:scale(m, { x = modelScale, y = modelScale / (ratio * 3.4), z = 1 })
     m:translate(m,
       cpml.vec3(
-         preview.getModValue('track_move_x') / modelScale,
-         preview.getModValue('track_move_z') / modelScale,
+        preview.getModValue('track_move_x') / modelScale,
+        preview.getModValue('track_move_z') / modelScale,
         -preview.getModValue('track_move_y') / modelScale)
     )
 
     -- no fucking clue why there's a *0.75 here
-    local origin = cpml.vec3(((NOTE_WIDTH * 3)/2 + GAP_WIDTH*0.75) / BASE_SCALE / modelScale, 0, 0)
+    local origin = cpml.vec3(((NOTE_WIDTH * 3) / 2 + GAP_WIDTH * 0.75) / BASE_SCALE / modelScale, 0, 0)
 
     local mLeft = cpml.mat4(m)
     local leftRot = eulerToQuaternion((-cpml.vec3(
@@ -1012,12 +1027,12 @@ function self.drawCanvas(static)
     mLeft:translate(mLeft, origin)
     mLeft = cpml.mat4.from_quaternion(leftRot) * mLeft
     mLeft:translate(mLeft, -origin)
-    mLeft:scale(mLeft, {x = 1, y = -1, z = 1})
+    mLeft:scale(mLeft, { x = 1, y = -1, z = 1 })
 
     mLeft:translate(mLeft,
       cpml.vec3(
-         preview.getModValue('trackleft_move_x') / modelScale,
-         preview.getModValue('trackleft_move_z') / modelScale,
+        preview.getModValue('trackleft_move_x') / modelScale,
+        preview.getModValue('trackleft_move_z') / modelScale,
         -preview.getModValue('trackleft_move_y') / modelScale))
     local mRight = cpml.mat4(m)
 
@@ -1030,12 +1045,12 @@ function self.drawCanvas(static)
     mRight:translate(mRight, -origin)
     mRight = cpml.mat4.from_quaternion(rightRot) * mRight
     mRight:translate(mRight, origin)
-    mRight:scale(mRight, {x = 1, y = -1, z = 1})
+    mRight:scale(mRight, { x = 1, y = -1, z = 1 })
 
     mRight:translate(mRight,
       cpml.vec3(
-         preview.getModValue('trackright_move_x') / modelScale,
-         preview.getModValue('trackright_move_z') / modelScale,
+        preview.getModValue('trackright_move_x') / modelScale,
+        preview.getModValue('trackright_move_z') / modelScale,
         -preview.getModValue('trackright_move_y') / modelScale))
 
     vertShader:send('modelMatrix', mLeft:to_vec4s_cols())
@@ -1080,7 +1095,7 @@ function self.drawPost()
         local event = timingEvents[i]
         local x, y = event.x * scale(), beatToY(event.beat, sh)
         local width, height = event.width, event.height
-        local hovered = mx > x and mx < (x + width) and my > (y - height/2) and my < (y + height / 2)
+        local hovered = mx > x and mx < (x + width) and my > (y - height / 2) and my < (y + height / 2)
         if hovered then
           hoveredEvent = event
           break
@@ -1103,12 +1118,12 @@ function self.drawPost()
           col = col * 0.6
         end
         love.graphics.setColor(col:unpack())
-        love.graphics.rectangle('fill', x, y - height/2, width, height, 2, 2)
+        love.graphics.rectangle('fill', x, y - height / 2, width, height, 2, 2)
         love.graphics.polygon('fill', x - 6, y, x, y - 6, x, y + 6)
         love.graphics.setColor(0, 0, 0, 1)
-        love.graphics.draw(event.textObj, math.floor(x + 3), math.floor(y - event.textObj:getHeight()/2 + 2))
+        love.graphics.draw(event.textObj, math.floor(x + 3), math.floor(y - event.textObj:getHeight() / 2 + 2))
         love.graphics.setColor(1, 1, 1, 1)
-        love.graphics.draw(event.textObj, math.floor(x + 3), math.floor(y - event.textObj:getHeight()/2))
+        love.graphics.draw(event.textObj, math.floor(x + 3), math.floor(y - event.textObj:getHeight() / 2))
       end
     end
 
@@ -1118,7 +1133,7 @@ function self.drawPost()
       local width, height = event.width, event.height
 
       --local tooltipX = math.min(x + width/2 - TOOLTIP_WIDTH/2, sw/2 - TOOLTIP_WIDTH - 40)
-      local tooltipX = math.min(mx - TOOLTIP_WIDTH/2, sw/2 - TOOLTIP_WIDTH - 40)
+      local tooltipX = math.min(mx - TOOLTIP_WIDTH / 2, sw / 2 - TOOLTIP_WIDTH - 40)
       local arrSize = 10
       local cx = clamp(mx, tooltipX + arrSize + 2, tooltipX + TOOLTIP_WIDTH - arrSize - 2)
 
@@ -1138,14 +1153,17 @@ function self.drawPost()
       love.graphics.rectangle('line', tooltipX, tooltipY, TOOLTIP_WIDTH, tooltipHeight, 2, 2)
       if not flipped then
         love.graphics.setColor(0, 0, 0, 1)
-        love.graphics.polygon('fill', cx - arrSize - 2, tooltipY + 2, cx, tooltipY - arrSize, cx + arrSize + 2, tooltipY + 2)
+        love.graphics.polygon('fill', cx - arrSize - 2, tooltipY + 2, cx, tooltipY - arrSize, cx + arrSize + 2,
+          tooltipY + 2)
         love.graphics.setColor(0.3, 0.3, 0.3, 1)
         love.graphics.line(cx - arrSize, tooltipY, cx, tooltipY - arrSize, cx + arrSize, tooltipY)
       else
         love.graphics.setColor(0, 0, 0, 1)
-        love.graphics.polygon('fill', cx - arrSize - 2, tooltipY + tooltipHeight - 2, cx, tooltipY + tooltipHeight + arrSize, cx + arrSize + 2, tooltipY + tooltipHeight - 2)
+        love.graphics.polygon('fill', cx - arrSize - 2, tooltipY + tooltipHeight - 2, cx,
+          tooltipY + tooltipHeight + arrSize, cx + arrSize + 2, tooltipY + tooltipHeight - 2)
         love.graphics.setColor(0.3, 0.3, 0.3, 1)
-        love.graphics.line(cx - arrSize, tooltipY + tooltipHeight, cx, tooltipY + tooltipHeight + arrSize, cx + arrSize, tooltipY + tooltipHeight)
+        love.graphics.line(cx - arrSize, tooltipY + tooltipHeight, cx, tooltipY + tooltipHeight + arrSize, cx + arrSize,
+          tooltipY + tooltipHeight)
       end
 
       love.graphics.setColor(1, 1, 1, 1)
@@ -1166,9 +1184,9 @@ function self.drawPost()
         local y = beatToY(things.beat, sh)
         local size = NOTE_WIDTH * scale()
         love.graphics.setColor(1, 1, 1, 0.3 + math.sin(love.timer.getTime() * 3) * 0.1)
-        love.graphics.rectangle('fill', x - size/2, y - size/2, size, size)
+        love.graphics.rectangle('fill', x - size / 2, y - size / 2, size, size)
         love.graphics.setColor(1, 1, 1, 1)
-        love.graphics.rectangle('line', x - size/2, y - size/2, size, size)
+        love.graphics.rectangle('line', x - size / 2, y - size / 2, size, size)
       end
       if things.gearShift then
         local gear = things.gearShift
@@ -1192,14 +1210,15 @@ function self.drawPost()
     -- slightly wacky, but it's ok
     local w = fonts.inter_12:getWidth(waveform.status)
     love.graphics.printf(waveform.status, 0, sh - 100, sw, 'center')
-    love.graphics.rectangle('fill', sw/2 - w/2, sh - 100 + fonts.inter_12:getHeight() + 1, w * waveform.progress, 2)
+    love.graphics.rectangle('fill', sw / 2 - w / 2, sh - 100 + fonts.inter_12:getHeight() + 1, w * waveform.progress, 2)
     love.graphics.setColor(1, 1, 1, 0.3)
-    love.graphics.rectangle('fill', sw/2 - w/2, sh - 100 + fonts.inter_12:getHeight() + 1, w, 2)
+    love.graphics.rectangle('fill', sw / 2 - w / 2, sh - 100 + fonts.inter_12:getHeight() + 1, w, 2)
   end
 
   if selectionX and selectionY then
     local mx, my = love.mouse.getPosition()
-    local x1, y1, x2, y2 = math.min(selectionX, mx), math.min(selectionY, my), math.max(selectionX, mx), math.max(selectionY, my)
+    local x1, y1, x2, y2 = math.min(selectionX, mx), math.min(selectionY, my), math.max(selectionX, mx),
+        math.max(selectionY, my)
 
     love.graphics.setColor(1, 1, 1, 0.2)
     love.graphics.rectangle('fill', x1, y1, x2 - x1, y2 - y1)
@@ -1254,6 +1273,7 @@ end
 function laneHit(i)
   laneActive[i]:reset(1)
 end
+
 function laneRelease(i)
   laneActive[i]:set(0)
 end
@@ -1288,23 +1308,25 @@ function self.mousepressed(x, y, button)
 
   if button == 2 and hoveredEvent and not hoveredEventCtx then
     hoveredEventCtx = ContextWidget(x, y, {
-      {'Edit', function()
+      { 'Edit', function()
         openWidget(EventEditWidget(hoveredEvent.event), true)
-      end},
-      {'Delete', function()
+      end },
+      { 'Delete', function()
         chart.removeThing(chart.findThing(hoveredEvent.event))
         chart.insertHistory('Remove event')
-      end},
-      {'Hide \'' .. hoveredEvent.type .. '\' events (UNIMPLEMENTED)', function() end},
+      end },
+      { 'Hide \'' .. hoveredEvent.type .. '\' events (UNIMPLEMENTED)', function() end },
     })
     openWidget(hoveredEventCtx)
     return
   end
 end
+
 function self.mousereleased(x, y, button)
   if not chart.loaded then return end
   if button == 1 and selectionX and selectionY then
-    local x1, y1, x2, y2 = math.min(selectionX, x), math.min(selectionY, y), math.max(selectionX, x), math.max(selectionY, y)
+    local x1, y1, x2, y2 = math.min(selectionX, x), math.min(selectionY, y), math.max(selectionX, x),
+        math.max(selectionY, y)
     selectionX, selectionY = nil, nil
 
     if math.abs(x2 - x1) < 4 and math.abs(y2 - y1) < 4 then
@@ -1320,7 +1342,7 @@ function self.mousereleased(x, y, button)
     for _, thing in ipairs(chart.chart) do
       if thing.note then
         local note = thing.note
-        local x = getColumnX(note.column) * scale() + love.graphics.getWidth()/2
+        local x = getColumnX(note.column) * scale() + love.graphics.getWidth() / 2
         local y = beatToY(thing.beat)
         local yEnd = beatToY(thing.beat + (note.length or 0))
 
@@ -1331,7 +1353,8 @@ function self.mousereleased(x, y, button)
       if thing.gearShift then
         local gear = thing.gearShift
 
-        local x = ((gear.lane == xdrv.XDRVLane.Left) and (getLeft() + getMLeft())/2 or (getRight() + getMRight())/2) + love.graphics.getWidth()/2
+        local x = ((gear.lane == xdrv.XDRVLane.Left) and (getLeft() + getMLeft()) / 2 or (getRight() + getMRight()) / 2) +
+        love.graphics.getWidth() / 2
         local y = beatToY(thing.beat)
         local yEnd = beatToY(thing.beat + gear.length)
 

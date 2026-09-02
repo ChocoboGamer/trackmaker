@@ -2,10 +2,10 @@ local conductor = require 'src.conductor'
 local xdrv      = require 'lib.xdrv'
 local logs      = require 'src.logs'
 local clipboard = require 'src.clipboard'
-local self = {}
+local self      = {}
 
 ---@enum Mode
-self.Mode = {
+self.Mode       = {
   -- Technically not a mode. Implies write = false
   None = 0,
   -- ArrowVortex-style insert mode. Press a key to set or unset a note.
@@ -63,7 +63,7 @@ local function setBeat(b)
 end
 
 ---@type (XDRVNote | XDRVGearShift)[]
-local ghosts = { }
+local ghosts = {}
 
 function self.getGhosts()
   local saneGhosts = {}
@@ -120,7 +120,7 @@ function self.beginNote(column)
       setBeat(beat + QUANTS[self.quantIndex])
     end
   else
-    local thing = { beat = beat, note = { } }
+    local thing = { beat = beat, note = {} }
     local thingIdx = chart.findThing(thing)
     local lastIdx = thingIdx or 1
     while thingIdx do
@@ -141,6 +141,7 @@ function self.beginNote(column)
   end
   events.redraw()
 end
+
 ---@param lane XDRVLane
 function self.beginGearShift(lane)
   self.clearSelection()
@@ -163,7 +164,7 @@ end
 ---@param dir XDRVDriftDirection
 function self.placeDrift(dir)
   local beat = getBeat()
-  local thing = { beat = beat, drift = { } }
+  local thing = { beat = beat, drift = {} }
   local thingIdx = chart.findThing(thing)
   local cmpEvent = chart.chart[thingIdx]
 
@@ -259,8 +260,8 @@ local function mirrorLane(l)
 end
 ---@param d XDRVDriftDirection
 local function mirrorDriftDir(d)
-  if d == xdrv.XDRVDriftDirection.Left  then return xdrv.XDRVDriftDirection.Right end
-  if d == xdrv.XDRVDriftDirection.Right then return xdrv.XDRVDriftDirection.Left  end
+  if d == xdrv.XDRVDriftDirection.Left then return xdrv.XDRVDriftDirection.Right end
+  if d == xdrv.XDRVDriftDirection.Right then return xdrv.XDRVDriftDirection.Left end
   return xdrv.XDRVDriftDirection.Neutral
 end
 
@@ -308,6 +309,7 @@ function self.deleteSelection()
     end
   end
 end
+
 function self.deleteKey()
   self.deleteSelection()
   logs.log('Deleted ' .. #self.selection .. ' notes')
@@ -342,9 +344,18 @@ function self.turnToMines()
   end
   local source = ''
   local target = ''
-  if hasMines then source = 'notes' target = 'mines' end
-  if hasNotes then source = 'mines' target = 'notes' end
-  if hasNotes and hasMines then source = 'things' target = 'notes/mines' end
+  if hasMines then
+    source = 'notes'
+    target = 'mines'
+  end
+  if hasNotes then
+    source = 'mines'
+    target = 'notes'
+  end
+  if hasNotes and hasMines then
+    source = 'things'
+    target = 'notes/mines'
+  end
   logs.log('Turned ' .. c .. ' ' .. source .. ' to ' .. target)
   chart.insertHistory('Invert selection mines')
   events.redraw()
@@ -358,6 +369,7 @@ function self.undo()
     logs.log('Nothing to undo')
   end
 end
+
 function self.redo()
   local mem = chart.redo()
   if mem then
@@ -371,6 +383,7 @@ function self.cut()
   self.deleteSelection()
   self.copy()
 end
+
 function self.copy()
   if not chart.loaded then return end
   if #self.selection == 0 then
@@ -390,10 +403,12 @@ function self.copy()
   logs.log('Copied ' .. #self.selection .. ' things')
   self.clearSelection()
 end
+
 function self.hasSomethingToPaste()
   local clip = love.system.getClipboardText()
   return clipboard.decode(clip) ~= nil
 end
+
 function self.paste()
   if not chart.loaded then return end
 
@@ -439,12 +454,12 @@ function self.keypressed(key, code, isRepeat)
   local triggeredKeybinds = {}
   for _, bind in pairs(keybinds.binds) do
     if
-      not (bind.ctrl and not ctrl) and
-      not (bind.shift and not shift) and
-      not (bind.viewOnly and self.write) and
-      not (bind.writeOnly and not self.write) and
-      not (not bind.canRepeat and isRepeat) and
-      not (not bind.alwaysUsable and self.viewBinds)
+        not (bind.ctrl and not ctrl) and
+        not (bind.shift and not shift) and
+        not (bind.viewOnly and self.write) and
+        not (bind.writeOnly and not self.write) and
+        not (not bind.canRepeat and isRepeat) and
+        not (not bind.alwaysUsable and self.viewBinds)
     then
       local isInvalid = false
       for _, k in ipairs(bind.keys or {}) do
@@ -551,12 +566,12 @@ function self.keypressed(key, code, isRepeat)
     end
   else
     if
-      code == 'a' or code == '1' or
-      code == 's' or code == '2' or
-      code == 'd' or code == '3' or
-      code == 'l' or code == '4' or
-      code == ';' or code == '5' or
-      code == '\'' or code == '6'
+        code == 'a' or code == '1' or
+        code == 's' or code == '2' or
+        code == 'd' or code == '3' or
+        code == 'l' or code == '4' or
+        code == ';' or code == '5' or
+        code == '\'' or code == '6'
     then
       logs.log('You must be in write mode to do this! (Press ' .. keybinds.formatBind(keybinds.binds.cycleMode) .. ')')
     end

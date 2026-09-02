@@ -51,6 +51,7 @@ end
 function self.logStdout(text)
   print(text)
 end
+
 function self.logFile(text)
   local timestamped = '[' .. os.date('%c') .. '] ' .. tostring(text)
 
@@ -58,14 +59,17 @@ function self.logFile(text)
   appendBufferTimer = APPEND_BUFFER_INTERVAL
   self.logStdout(timestamped)
 end
+
 function self.log(text)
   self.logFile(text)
   table.insert(logs, { text, t = t })
 end
+
 function self.warn(text)
   self.logFile('WARN: ' .. text)
   table.insert(logs, { text, t = t + 8, warning = true })
 end
+
 -- what's uplog
 function self.uplog(id, text)
   self.logFile(text)

@@ -71,8 +71,8 @@ function Select:draw()
   else
     love.graphics.setColor(colors.text:unpack())
   end
-  love.graphics.draw(self.textObjs[self.selectedIdx], PAD_H, self.height/2 - fonts.inter_12:getHeight()/2)
-  love.graphics.printf('▼', PAD_H, self.height/2 - fonts.inter_12:getHeight()/2, self.width - PAD_H * 2, 'right')
+  love.graphics.draw(self.textObjs[self.selectedIdx], PAD_H, self.height / 2 - fonts.inter_12:getHeight() / 2)
+  love.graphics.printf('▼', PAD_H, self.height / 2 - fonts.inter_12:getHeight() / 2, self.width - PAD_H * 2, 'right')
 end
 
 return Select

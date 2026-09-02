@@ -10,9 +10,11 @@ function pool:new()
   local newSource = self.base:clone()
   return newSource
 end
+
 function pool:setVolume(volume)
   self.volume = volume
 end
+
 function pool:play(volume, pitch)
   volume = volume or 0.5
   pitch = pitch or 1
@@ -23,6 +25,7 @@ function pool:play(volume, pitch)
   source:play()
   return source
 end
+
 -- ONLY WORKS FOR MONO SOUNDS
 function pool:playSpatial(x, y, volume, pitch)
   if self.base:getChannelCount() ~= 1 then
@@ -41,6 +44,7 @@ function pool:playSpatial(x, y, volume, pitch)
   source:play()
   return source
 end
+
 pool.__index = pool
 
 function _M.makeSoundPool(filename)
@@ -57,6 +61,7 @@ function _M.normalizeVolume(v)
   -- technically not precise but it's fast and easy to remember
   return v * v
 end
+
 function _M.inverseNormalizeVolume(v)
   return math.pow(v, 0.5)
 end

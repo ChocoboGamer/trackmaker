@@ -20,7 +20,7 @@ local function gcd(m, n)
 end
 
 local function lcm(m, n)
-  return ( m ~= 0 and n ~= 0 ) and m * n / gcd( m, n ) or 0
+  return (m ~= 0 and n ~= 0) and m * n / gcd(m, n) or 0
 end
 
 local QUANTS = {
@@ -112,38 +112,38 @@ M.STAGE_BACKGROUNDS = {
 -- still better than the other solution of having to sync across 3 places!
 ---@type { [1]: string, [2]: string, [3]: XDRVMetadataValueType, eitherOr: string?, default: any?}[]
 local metadataTags = {
-  {'MUSIC_TITLE',                   'musicTitle',                  'string'     },
-  {'ALTERNATE_TITLE',               'alternateTitle',              'string'     },
-  {'SUBTITLE',                      'subtitle',                    'string'     },
-  {'MUSIC_ARTIST',                  'musicArtist',                 'string'     },
-  {'MUSIC_CREDIT',                  'musicCredit',                 'string'     },
-  {'MUSIC_CREDIT_COLOR',            'musicCreditColor',            'string'     },
-  {'MUSIC_AUDIO',                   'musicAudio',                  'string'     },
-  {'DISABLE_MUSIC_PREVIEW',         'disableMusicPreview',         'bool'       },
-  {'MUSIC_PREVIEW_START',           'musicPreviewStart',           'float',     },
-  {'MUSIC_PREVIEW_LENGTH',          'musicPreviewLength',          'float',       default = 0 },
-  {'MUSIC_VOLUME',                  'musicVolume',                 'float',       default = 1 },
-  {'MUSIC_OFFSET',                  'musicOffset',                 'float',       default = 0 },
-  {'JACKET_IMAGE',                  'jacketImage',                 'string'     },
-  {'JACKET_HEIGHT',                 'jacketHeight',                'float',       default = 0.345 },
-  {'JACKET_ILLUSTRATOR',            'jacketIllustrator',           'string'     },
-  {'CHART_AUTHOR',                  'chartAuthor',                 'string',      eitherOr = 'CHART_AUTHORS' },
-  {'CHART_AUTHORS',                 'chartAuthors',                'stringArray', eitherOr = 'CHART_AUTHOR' },
-  {'MOD_AUTHOR',                    'modAuthor',                 'string',      eitherOr = 'MOD_AUTHORS' },
-  {'MOD_AUTHORS',                   'modAuthors',                'stringArray', eitherOr = 'MOD_AUTHOR' },
-  {'CHART_BOSS',                    'chartBoss',                   'bool'       },
-  {'CHART_DIFFICULTY',              'chartDifficulty',             'difficulty',  default = M.XDRVDifficulty.Beginner },
-  {'CHART_LEVEL',                   'chartLevel',                  'int',         default = 0 },
-  {'CHART_UNLOCK',                  'chartUnlock',                 'string'     },
-  {'CHART_DISPLAY_BPM',             'chartDisplayBPM',             'int',       },
-  {'CHART_BPM',                     'chartBPM',                    'float',       default = 120 },
-  {'FLASH_TRACK',                   'isFlashTrack',                'bool'       },
-  {'KEYBOARD_ONLY',                 'isKeyboardOnly',              'bool'       },
-  {'ORIGINAL',                      'isOriginal',                  'bool'       },
-  {'MODFILE_PATH',                  'modfilePath',                 'string'     },
-  {'RPC_HIDDEN',                    'rpcHidden',                   'bool'       },
-  {'DISABLE_LEADERBOARD_UPLOADING', 'disableLeaderboardUploading', 'bool'       },
-  {'STAGE_BACKGROUND',              'stageBackground',             'string',      default = 'default' },
+  { 'MUSIC_TITLE',                   'musicTitle',                  'string' },
+  { 'ALTERNATE_TITLE',               'alternateTitle',              'string' },
+  { 'SUBTITLE',                      'subtitle',                    'string' },
+  { 'MUSIC_ARTIST',                  'musicArtist',                 'string' },
+  { 'MUSIC_CREDIT',                  'musicCredit',                 'string' },
+  { 'MUSIC_CREDIT_COLOR',            'musicCreditColor',            'string' },
+  { 'MUSIC_AUDIO',                   'musicAudio',                  'string' },
+  { 'DISABLE_MUSIC_PREVIEW',         'disableMusicPreview',         'bool' },
+  { 'MUSIC_PREVIEW_START',           'musicPreviewStart',           'float', },
+  { 'MUSIC_PREVIEW_LENGTH',          'musicPreviewLength',          'float',       default = 0 },
+  { 'MUSIC_VOLUME',                  'musicVolume',                 'float',       default = 1 },
+  { 'MUSIC_OFFSET',                  'musicOffset',                 'float',       default = 0 },
+  { 'JACKET_IMAGE',                  'jacketImage',                 'string' },
+  { 'JACKET_HEIGHT',                 'jacketHeight',                'float',       default = 0.345 },
+  { 'JACKET_ILLUSTRATOR',            'jacketIllustrator',           'string' },
+  { 'CHART_AUTHOR',                  'chartAuthor',                 'string',      eitherOr = 'CHART_AUTHORS' },
+  { 'CHART_AUTHORS',                 'chartAuthors',                'stringArray', eitherOr = 'CHART_AUTHOR' },
+  { 'MOD_AUTHOR',                    'modAuthor',                   'string',      eitherOr = 'MOD_AUTHORS' },
+  { 'MOD_AUTHORS',                   'modAuthors',                  'stringArray', eitherOr = 'MOD_AUTHOR' },
+  { 'CHART_BOSS',                    'chartBoss',                   'bool' },
+  { 'CHART_DIFFICULTY',              'chartDifficulty',             'difficulty',  default = M.XDRVDifficulty.Beginner },
+  { 'CHART_LEVEL',                   'chartLevel',                  'int',         default = 0 },
+  { 'CHART_UNLOCK',                  'chartUnlock',                 'string' },
+  { 'CHART_DISPLAY_BPM',             'chartDisplayBPM',             'int', },
+  { 'CHART_BPM',                     'chartBPM',                    'float',       default = 120 },
+  { 'FLASH_TRACK',                   'isFlashTrack',                'bool' },
+  { 'KEYBOARD_ONLY',                 'isKeyboardOnly',              'bool' },
+  { 'ORIGINAL',                      'isOriginal',                  'bool' },
+  { 'MODFILE_PATH',                  'modfilePath',                 'string' },
+  { 'RPC_HIDDEN',                    'rpcHidden',                   'bool' },
+  { 'DISABLE_LEADERBOARD_UPLOADING', 'disableLeaderboardUploading', 'bool' },
+  { 'STAGE_BACKGROUND',              'stageBackground',             'string',      default = 'default' },
 }
 
 ---@type table<XDRVMetadataValueType, any>
@@ -180,6 +180,7 @@ function metadataValueParsers.string(s)
   if type(s) ~= 'string' then return '' end
   return s
 end
+
 function metadataValueParsers.stringArray(s)
   if type(s) ~= 'string' then return {} end
 
@@ -189,20 +190,24 @@ function metadataValueParsers.stringArray(s)
   end
   return strs
 end
+
 function metadataValueParsers.float(s)
   return tonumber(s) or -1
 end
+
 function metadataValueParsers.int(s)
   return round(metadataValueParsers.float(s))
 end
+
 function metadataValueParsers.bool(s)
   return s == 'TRUE'
 end
+
 function metadataValueParsers.difficulty(s)
-  if s == 'BEGINNER'  then return M.XDRVDifficulty.Beginner  end
-  if s == 'NORMAL'    then return M.XDRVDifficulty.Normal    end
-  if s == 'HYPER'     then return M.XDRVDifficulty.Hyper     end
-  if s == 'EXTREME'   then return M.XDRVDifficulty.Extreme   end
+  if s == 'BEGINNER' then return M.XDRVDifficulty.Beginner end
+  if s == 'NORMAL' then return M.XDRVDifficulty.Normal end
+  if s == 'HYPER' then return M.XDRVDifficulty.Hyper end
+  if s == 'EXTREME' then return M.XDRVDifficulty.Extreme end
   if s == 'OVERDRIVE' then return M.XDRVDifficulty.Overdrive end
 
   return M.XDRVDifficulty.Beginner
@@ -214,26 +219,32 @@ local metadataValueSerializers = {}
 function metadataValueSerializers.string(s)
   return s
 end
+
 function metadataValueSerializers.stringArray(s)
   return table.concat(s, ', ')
 end
+
 function metadataValueSerializers.float(n)
   return tostring(n)
 end
+
 function metadataValueSerializers.int(n)
   return tostring(round(n))
 end
+
 function metadataValueSerializers.bool(b)
   return b and 'TRUE' or 'FALSE'
 end
+
 function metadataValueSerializers.difficulty(d)
-  if d == M.XDRVDifficulty.Beginner  then return 'BEGINNER'  end
-  if d == M.XDRVDifficulty.Normal    then return 'NORMAL'    end
-  if d == M.XDRVDifficulty.Hyper     then return 'HYPER'     end
-  if d == M.XDRVDifficulty.Extreme   then return 'EXTREME'   end
+  if d == M.XDRVDifficulty.Beginner then return 'BEGINNER' end
+  if d == M.XDRVDifficulty.Normal then return 'NORMAL' end
+  if d == M.XDRVDifficulty.Hyper then return 'HYPER' end
+  if d == M.XDRVDifficulty.Extreme then return 'EXTREME' end
   if d == M.XDRVDifficulty.Overdrive then return 'OVERDRIVE' end
   return 'BEGINNER'
 end
+
 M.formatDifficulty = metadataValueSerializers.difficulty
 
 ---@param t XDRVMetadata
@@ -317,21 +328,21 @@ local function parseMetadataValues(t)
 end
 
 function M.formatDifficultyShort(d)
-  if d == M.XDRVDifficulty.Beginner  then return 'BG' end
-  if d == M.XDRVDifficulty.Normal    then return 'NM' end
-  if d == M.XDRVDifficulty.Hyper     then return 'HY' end
-  if d == M.XDRVDifficulty.Extreme   then return 'EX' end
+  if d == M.XDRVDifficulty.Beginner then return 'BG' end
+  if d == M.XDRVDifficulty.Normal then return 'NM' end
+  if d == M.XDRVDifficulty.Hyper then return 'HY' end
+  if d == M.XDRVDifficulty.Extreme then return 'EX' end
   if d == M.XDRVDifficulty.Overdrive then return 'OV' end
   return 'BG'
 end
 
 local function parseLane(str)
-  if str == 'left'  then return M.XDRVLane.Left  end
+  if str == 'left' then return M.XDRVLane.Left end
   if str == 'right' then return M.XDRVLane.Right end
   return -1
 end
 local function formatLane(lane)
-  if lane == M.XDRVLane.Left  then return 'left'  end
+  if lane == M.XDRVLane.Left then return 'left' end
   if lane == M.XDRVLane.Right then return 'right' end
 end
 
@@ -489,13 +500,15 @@ function M.addHoldEnds(things)
       table.insert(newEvents, { beat = thing.beat + thing.note.length, holdEnd = { column = thing.note.column } })
     elseif thing.gearShift then
       table.insert(newEvents, { beat = thing.beat, gearShiftStart = { lane = thing.gearShift.lane } })
-      table.insert(newEvents, { beat = thing.beat + thing.gearShift.length, gearShiftEnd = { lane = thing.gearShift.lane } })
+      table.insert(newEvents,
+        { beat = thing.beat + thing.gearShift.length, gearShiftEnd = { lane = thing.gearShift.lane } })
     else
       table.insert(newEvents, thing)
     end
   end
   return newEvents
 end
+
 ---@param things XDRVThing[]
 ---@return XDRVThing[]
 function M.collapseHoldEnds(things)
@@ -566,12 +579,12 @@ end
 ---@param c table<number, XDRVThing>
 local function formatNotesCol(c)
   return
-    noteToType(c[1]) ..
-    noteToType(c[2]) ..
-    noteToType(c[3]) .. '-' ..
-    noteToType(c[4]) ..
-    noteToType(c[5]) ..
-    noteToType(c[6])
+      noteToType(c[1]) ..
+      noteToType(c[2]) ..
+      noteToType(c[3]) .. '-' ..
+      noteToType(c[4]) ..
+      noteToType(c[5]) ..
+      noteToType(c[6])
 end
 ---@param thing XDRVThing
 local function gearToType(thing)
@@ -623,13 +636,13 @@ local function gearShiftEvent(beat, s, lane)
 end
 local function driftEvent(beat, s)
   if s == '1' then
-    return { beat = beat, drift = { direction = M.XDRVDriftDirection.Left }}
+    return { beat = beat, drift = { direction = M.XDRVDriftDirection.Left } }
   end
   if s == '2' then
-    return { beat = beat, drift = { direction = M.XDRVDriftDirection.Right }}
+    return { beat = beat, drift = { direction = M.XDRVDriftDirection.Right } }
   end
   if s == '3' then
-    return { beat = beat, drift = { direction = M.XDRVDriftDirection.Neutral }}
+    return { beat = beat, drift = { direction = M.XDRVDriftDirection.Neutral } }
   end
   return nil
 end
@@ -804,13 +817,14 @@ local function deserializeChart(str)
         end
       end
       local noterow = row[#row]
-      local c1, c2, c3, c4, c5, c6, l, r, d = string.match(noterow, '([%dM])([%dM])([%dM])%-([%dM])([%dM])([%dM])|([%dM])([%dM])|([%dM])')
+      local c1, c2, c3, c4, c5, c6, l, r, d = string.match(noterow,
+        '([%dM])([%dM])([%dM])%-([%dM])([%dM])([%dM])|([%dM])([%dM])|([%dM])')
       if c1 then
-        for column, s in ipairs({c1, c2, c3, c4, c5, c6}) do
+        for column, s in ipairs({ c1, c2, c3, c4, c5, c6 }) do
           local ev = noteEvent(b, s, column)
           if ev then table.insert(things, ev) end
         end
-        for lane, gear in ipairs({l, r}) do
+        for lane, gear in ipairs({ l, r }) do
           local ev = gearShiftEvent(b, gear, lane)
           if ev then table.insert(things, ev) end
         end

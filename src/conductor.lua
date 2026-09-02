@@ -126,6 +126,7 @@ end
 function M.secondsToBeats(s, bpm)
   return s * ((bpm or M.getBPM()) / 60)
 end
+
 function M.beatsToSeconds(b, bpm)
   return (b * 60) / (bpm or M.getBPM())
 end
@@ -141,6 +142,7 @@ function M.getBPMAtBeat(b)
   end
   return bpm
 end
+
 function M.getBPM()
   return M.getBPMAtBeat(M.beat)
 end
@@ -226,7 +228,8 @@ function M.timeAtBeat(beat)
       local startBeatThisSegment = startBeat
       local startBeatNextSegment = M.bpms[i + 1][1]
       local beatsThisSegment = math.min(startBeatNextSegment - startBeatThisSegment, beat)
-      tempElapsed = tempElapsed + M.beatsToSeconds(beatsThisSegment, bpm) -- count time based on how many beats we spent at each bpm
+      tempElapsed = tempElapsed +
+      M.beatsToSeconds(beatsThisSegment, bpm)                             -- count time based on how many beats we spent at each bpm
       beat = beat - beatsThisSegment
     end
 
@@ -246,6 +249,7 @@ function M.getTimeSignatureAtBeat(beat)
   end
   return sig
 end
+
 function M.getTimeSignature()
   return M.getTimeSignatureAtBeat(M.beat)
 end
@@ -271,6 +275,7 @@ function M.play()
   M.initStates()
   M.playing = true
 end
+
 function M.pause()
   if not song then return end
   M.playing = false
@@ -310,14 +315,17 @@ function M.seek(s)
   M.time = s
   updateSongPos()
 end
+
 function M.seekDelta(s)
   M.time = M.time + s
   updateSongPos()
 end
+
 function M.seekBeats(b)
   M.time = M.timeAtBeat(b)
   updateSongPos()
 end
+
 function M.isPlaying()
   return M.playing
 end

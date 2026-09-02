@@ -43,7 +43,7 @@ end
 function self.encode(things, opt)
   opt = opt or {}
 
-  local clip = { }
+  local clip = {}
 
   local lastGap
   local lastWasNote = false
@@ -67,7 +67,8 @@ function self.encode(things, opt)
         -- compact chords
         table.insert(clip, thing.note.column)
       else
-        table.insert(clip, SYMBOLS.NOTE .. thing.note.column .. (isHold and (SYMBOLS.HOLD .. formatNum(thing.note.length)) or ''))
+        table.insert(clip,
+          SYMBOLS.NOTE .. thing.note.column .. (isHold and (SYMBOLS.HOLD .. formatNum(thing.note.length)) or ''))
       end
       lastWasNote = true
     else

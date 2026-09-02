@@ -1,17 +1,17 @@
-local logs   = require 'src.logs'
-local audio  = require 'src.audio'
-local config = require 'src.config'
-local self = {}
+local logs              = require 'src.logs'
+local audio             = require 'src.audio'
+local config            = require 'src.config'
+local self              = {}
 
 ---@type love.Decoder
-self.decoder = nil
+self.decoder            = nil
 ---@type table<number, table<number, number>>
-self.samples = {}
+self.samples            = {}
 
-local BUFFER_SIZE = 4096
+local BUFFER_SIZE       = 4096
 
-local MESH_SEGMENT_SIZE = 1 -- seconds; different on different LODs
-local BASE_SAMPLE_RATE = 128 -- vertices per second on base zoom
+local MESH_SEGMENT_SIZE = 1  -- seconds; different on different LODs
+local BASE_SAMPLE_RATE  = 128 -- vertices per second on base zoom
 
 local function getSampleRate()
   return config.config.doubleResWaveform and (BASE_SAMPLE_RATE * 2) or BASE_SAMPLE_RATE
@@ -45,7 +45,7 @@ function self.init(data)
   self.progress = 0
 end
 
-local UPDATE_TIMER = 1/80
+local UPDATE_TIMER = 1 / 80
 
 function self.update()
   if not self.bake then return end

@@ -175,9 +175,9 @@ local function contextToNSMenuItem(item)
       end
       menuItem.keyEquivalent = NSString(key)
       local flags = 0
-      if bind.shift then flags = bit.bor(flags, NSEventModifierFlagShift  ) end
-      if bind.ctrl  then flags = bit.bor(flags, NSEventModifierFlagCommand) end
-      if bind.alt   then flags = bit.bor(flags, NSEventModifierFlagOption ) end
+      if bind.shift then flags = bit.bor(flags, NSEventModifierFlagShift) end
+      if bind.ctrl then flags = bit.bor(flags, NSEventModifierFlagCommand) end
+      if bind.alt then flags = bit.bor(flags, NSEventModifierFlagOption) end
       menuItem.keyEquivalentModifierMask = flags
     end
 
@@ -190,11 +190,11 @@ local function contextToNSMenuItem(item)
       label:setTranslatesAutoresizingMaskIntoConstraints(NO)
       -- awful higher ver macos fix
       if type(label.widthAnchor) == 'function' then
-		label:widthAnchor():constraintEqualToConstant(150).active = YES
-      	label:heightAnchor():constraintEqualToConstant(15).active = YES
+        label:widthAnchor():constraintEqualToConstant(150).active = YES
+        label:heightAnchor():constraintEqualToConstant(15).active = YES
       else
-      	label.widthAnchor:constraintEqualToConstant(150).active = YES
-      	label.heightAnchor:constraintEqualToConstant(15).active = YES
+        label.widthAnchor:constraintEqualToConstant(150).active = YES
+        label.heightAnchor:constraintEqualToConstant(15).active = YES
       end
       label.font = objc.NSFont:systemFontOfSize(12)
       label.textColor = objc.NSColor:grayColor()

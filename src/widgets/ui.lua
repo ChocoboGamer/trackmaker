@@ -24,6 +24,7 @@ end
 function UIWidget:click(x, y, button)
   self.container:click(x, y, button)
 end
+
 function UIWidget:move(x, y)
   self.container:move(x, y)
 end
