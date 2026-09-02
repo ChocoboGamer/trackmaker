@@ -80,7 +80,7 @@ function MinimapWidget:draw()
   for _, thing in ipairs(chart.chart) do
     if thing.note then
       love.graphics.setColor(renderer.getColumnColor(thing.note.column):unpack())
-      love.graphics.points(thing.note.column - 1, self:getYFromBeat(thing.beat, chartDur))
+      love.graphics.points(thing.note.column, self:getYFromBeat(thing.beat, chartDur))
     end
     if thing.gearShift then
       love.graphics.setColor(renderer.getLaneColor(thing.gearShift.lane):alpha(0.9):unpack())
