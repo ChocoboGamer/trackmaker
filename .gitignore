@@ -2,4 +2,4 @@
 *.so
 *.dylib
 releases/
-.vscode
+.vscode/*
