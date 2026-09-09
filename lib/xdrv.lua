@@ -67,6 +67,7 @@ M.STAGE_BACKGROUNDS = {
   'BackgroundIgnia',
   'BackgroundVivid',
   'BackgroundDesert',
+  'BackgroundRush',
 }
 
 ---@class XDRVMetadata @ https://github.com/tari-cat/XDRV/blob/main/Assets/Scripts/XDRVEditorScripts/XDRV.cs#L631
