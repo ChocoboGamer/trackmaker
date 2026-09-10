@@ -70,7 +70,42 @@ M.STAGE_BACKGROUNDS = {
   'BackgroundRush',
 }
 
----@class XDRVMetadata @ https://github.com/tari-cat/XDRV/blob/main/Assets/Scripts/XDRVEditorScripts/XDRV.cs#L631
+M.CHART_LEVELSTYLES = {
+  'NORMAL',
+  'HIDDEN',
+  'BANGBANG',
+  'COLON_ANGLE_BRACKET',
+  'COLON_SQUARE_BRACKET',
+  'COLON_THREE',
+  'COLON_THREE_C',
+  'CUBED',
+  'CURRENCY',
+  'DOUBLE_MINUS',
+  'DOUBLE_PLUS',
+  'DOUBLE_QUESTION',
+  'ELIPSIS',
+  'ELITE_GAMER',
+  'EVIL',
+  'EXCLAMATION',
+  'FREEWAY',
+  'HAPPY',
+  'IMAGINARY',
+  'INTERROBANG',
+  'MAYBE',
+  'MINUS',
+  'PERIOD',
+  'PLUS',
+  'QUESTION',
+  'QUOTES',
+  'SAD',
+  'SAGE',
+  'SQUARE_ROOT',
+  'SQUARED',
+  'SUPER_HAPPY',
+  'MIDDY',
+}
+
+---@class XDRVMetadata
 ---@field musicTitle string @ MUSIC_TITLE
 ---@field alternateTitle string @ ALTERNATE_TITLE
 ---@field subtitle string @ SUBTITLE
@@ -90,7 +125,6 @@ M.STAGE_BACKGROUNDS = {
 ---@field chartAuthors string[] @ CHART_AUTHORS
 ---@field modAuthor string @ MOD_AUTHOR
 ---@field modAuthors string[] @ MOD_AUTHORS
------@field chartTags { [1]: number, [2]: number, [3]: number, [4]: number } @ CHART_TAGS -- moved to _discardedTags
 ---@field chartBoss boolean @ CHART_BOSS
 ---@field chartDifficulty XDRVDifficulty @ CHART_DIFFICULTY
 ---@field chartLevel number @ CHART_LEVEL
@@ -106,45 +140,48 @@ M.STAGE_BACKGROUNDS = {
 ---@field stageBackground string @ STAGE_BACKGROUND
 ---@field _discardedTags table<string, string> @ for unrecognized or invalid tags
 
----@alias XDRVMetadataValueType 'string' | 'stringArray' | 'float' | 'int' | 'bool' | 'difficulty'
+---@alias XDRVMetadataValueType 'string' | 'stringArray' | 'float' | 'int' | 'bool' | 'difficulty' | 'chartLevelStyle'
 
 -- until lua-lsp adds a keyof<> this is the best we're getting
 -- probably susceptible to missing a key either in the type def or in this table
 -- still better than the other solution of having to sync across 3 places!
----@type { [1]: string, [2]: string, [3]: XDRVMetadataValueType, eitherOr: string?, default: any?}[]
+---@type { [1]: string, [2]: string, [3]: XDRVMetadataValueType, replace: string?, default: any?}[]
 local metadataTags = {
   { 'MUSIC_TITLE',                   'musicTitle',                  'string' },
   { 'ALTERNATE_TITLE',               'alternateTitle',              'string' },
   { 'SUBTITLE',                      'subtitle',                    'string' },
-  { 'MUSIC_ARTIST',                  'musicArtist',                 'string' },
   { 'MUSIC_CREDIT',                  'musicCredit',                 'string' },
+  { 'MUSIC_SORUCE',                  'musicSource',                 'string' },
+  { 'MUSIC_COPYRIGHT',               'musicCopyright',              'string' },
   { 'MUSIC_CREDIT_COLOR',            'musicCreditColor',            'string' },
+  { 'MUSIC_ARTIST',                  'musicArtist',                 'string' },
   { 'MUSIC_AUDIO',                   'musicAudio',                  'string' },
-  { 'DISABLE_MUSIC_PREVIEW',         'disableMusicPreview',         'bool' },
-  { 'MUSIC_PREVIEW_START',           'musicPreviewStart',           'float', },
-  { 'MUSIC_PREVIEW_LENGTH',          'musicPreviewLength',          'float',       default = 0 },
-  { 'MUSIC_VOLUME',                  'musicVolume',                 'float',       default = 1 },
-  { 'MUSIC_OFFSET',                  'musicOffset',                 'float',       default = 0 },
+  { 'DISABLE_MUSIC_PREVIEW',         'disableMusicPreview',         'bool',       default = false },
+  { 'MUSIC_PREVIEW_START',           'musicPreviewStart',           'float',      default = -1 },
+  { 'MUSIC_PREVIEW_LENGTH',          'musicPreviewLength',          'float',      default = 10 },
+  { 'MUSIC_VOLUME',                  'musicVolume',                 'float',      default = 1 },
+  { 'MUSIC_OFFSET',                  'musicOffset',                 'float',      default = 0 },
   { 'JACKET_IMAGE',                  'jacketImage',                 'string' },
-  { 'JACKET_HEIGHT',                 'jacketHeight',                'float',       default = 0.345 },
   { 'JACKET_ILLUSTRATOR',            'jacketIllustrator',           'string' },
-  { 'CHART_AUTHOR',                  'chartAuthor',                 'string',      eitherOr = 'CHART_AUTHORS' },
-  { 'CHART_AUTHORS',                 'chartAuthors',                'stringArray', eitherOr = 'CHART_AUTHOR' },
-  { 'MOD_AUTHOR',                    'modAuthor',                   'string',      eitherOr = 'MOD_AUTHORS' },
-  { 'MOD_AUTHORS',                   'modAuthors',                  'stringArray', eitherOr = 'MOD_AUTHOR' },
-  { 'CHART_BOSS',                    'chartBoss',                   'bool' },
-  { 'CHART_DIFFICULTY',              'chartDifficulty',             'difficulty',  default = M.XDRVDifficulty.Beginner },
-  { 'CHART_LEVEL',                   'chartLevel',                  'int',         default = 0 },
+  { 'JACKET_HEIGHT',                 'jacketHeight',                'float',      default = 0.345 },
+  { 'CHART_AUTHOR',                  'chartAuthor',                 'string',     replace = 'CHART_AUTHORS' },
+  { 'CHART_AUTHORS',                 'chartAuthors',                'stringArray' },
+  { 'MOD_AUTHOR',                    'modAuthor',                   'string',     replace = 'MOD_AUTHORS' },
+  { 'MOD_AUTHORS',                   'modAuthors',                  'stringArray' },
+  { 'CHART_BOSS',                    'chartBoss',                   'bool',       default = false },
+  { 'CHART_DIFFICULTY',              'chartDifficulty',             'difficulty', default = M.XDRVDifficulty.Normal },
+  { 'CHART_LEVEL',                   'chartLevel',                  'int',        default = 0 },
+  { 'CHART_LEVEL_STYLE',             'chartLevelStyle',             'string',     default = 'NORMAL' },
   { 'CHART_UNLOCK',                  'chartUnlock',                 'string' },
-  { 'CHART_DISPLAY_BPM',             'chartDisplayBPM',             'int', },
-  { 'CHART_BPM',                     'chartBPM',                    'float',       default = 120 },
-  { 'FLASH_TRACK',                   'isFlashTrack',                'bool' },
-  { 'KEYBOARD_ONLY',                 'isKeyboardOnly',              'bool' },
-  { 'ORIGINAL',                      'isOriginal',                  'bool' },
+  { 'CHART_DISPLAY_BPM',             'chartDisplayBPM',             'int',        default = 120 },
+  { 'CHART_BPM',                     'chartBPM',                    'float',      default = 120 },
+  { 'FLASH_TRACK',                   'isFlashTrack',                'bool',       default = false },
+  { 'KEYBOARD_ONLY',                 'isKeyboardOnly',              'bool',       default = false },
+  { 'ORIGINAL',                      'isOriginal',                  'bool',       default = false },
   { 'MODFILE_PATH',                  'modfilePath',                 'string' },
-  { 'RPC_HIDDEN',                    'rpcHidden',                   'bool' },
-  { 'DISABLE_LEADERBOARD_UPLOADING', 'disableLeaderboardUploading', 'bool' },
-  { 'STAGE_BACKGROUND',              'stageBackground',             'string',      default = 'default' },
+  { 'RPC_HIDDEN',                    'rpcHidden',                   'bool',       default = true },
+  { 'DISABLE_LEADERBOARD_UPLOADING', 'disableLeaderboardUploading', 'bool',       default = true },
+  { 'STAGE_BACKGROUND',              'stageBackground',             'string',     default = 'BackgroundTunnel' },
 }
 
 ---@type table<XDRVMetadataValueType, any>
@@ -252,43 +289,34 @@ M.formatDifficulty = metadataValueSerializers.difficulty
 ---@return ({[1]: string, [2]: string})[]
 local function serializeMetadataValues(t)
   local data = {}
-  local seenTags = {}
   local populatedTags = {}
 
   for _, tag in ipairs(metadataTags) do
+    local xdrv_name = tag[1]
     local what = tag[3]
-    local v
-    local excluded = false
+    local f_value
     if t[tag[2]] then
-      v = metadataValueSerializers[what](t[tag[2]])
+      f_value = metadataValueSerializers[what](t[tag[2]])
     else
-      v = metadataValueSerializers[what](tag.default or defaultValues[what])
+      f_value = metadataValueSerializers[what](tag.default or defaultValues[what])
     end
 
-    if tag.eitherOr then
-      if populatedTags[tag.eitherOr] then
-        -- it's resolved, move on
-        excluded = true
-      elseif seenTags[tag.eitherOr] then
-        -- resolved, but in our favor, hey!
-        excluded = false
-      else
-        -- one of us two needs to die
-        -- this is a STUPID way to resolve this; we see if the current value
-        -- is empty and exclude ourselves if so
-        excluded = v == ''
+    if tag.replace then
+      if not populatedTags[tag.replace] then
+        xdrv_name = tag.replace
       end
     end
 
-    if not excluded then
-      table.insert(data, { tag[1], v })
-      populatedTags[tag[1]] = true
+    if not populatedTags[xdrv_name] then
+      table.insert(data, { xdrv_name, f_value })
+      -- xdrv_name can never be nil.
+      ---@diagnostic disable-next-line: need-check-nil
+      populatedTags[xdrv_name] = true
     end
-    seenTags[tag[1]] = true
   end
 
-  for tag, value in ipairs(t._discardedTags) do
-    table.insert(data, tag, value)
+  for tag, value in pairs(t._discardedTags) do
+    table.insert(data, { tag, value })
   end
 
   return data
@@ -305,7 +333,7 @@ local function parseMetadataValues(t)
     local foundMatch = false
     for _, tag in ipairs(metadataTags) do
       local what = tag[3]
-      if tag[1] == key and not populatedTags[tag.eitherOr] then
+      if tag[1] == key and not populatedTags[tag.replace] then
         print(tag[2], what, metadataValueParsers[what](value))
         metadata[tag[2]] = metadataValueParsers[what](value)
         foundMatch = true
@@ -314,12 +342,11 @@ local function parseMetadataValues(t)
       end
     end
     if not foundMatch then
-      -- unrecognized, drop it in the misc pile
       metadata._discardedTags[key] = value
     end
   end
   for _, tag in ipairs(metadataTags) do
-    if not metadata[tag[2]] and not populatedTags[tag.eitherOr] then
+    if not metadata[tag[2]] and not populatedTags[tag.replace] then
       local what = tag[3]
       metadata[tag[2]] = tag.default or defaultValues[what]
     end
