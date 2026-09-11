@@ -145,7 +145,7 @@ M.CHART_LEVELSTYLES = {
 -- until lua-lsp adds a keyof<> this is the best we're getting
 -- probably susceptible to missing a key either in the type def or in this table
 -- still better than the other solution of having to sync across 3 places!
----@type { [1]: string, [2]: string, [3]: XDRVMetadataValueType, replace: string?, default: any?}[]
+---@type { [1]: string, [2]: string, [3]: XDRVMetadataValueType, default: any?, singular: string?}[]
 local metadataTags = {
   { 'MUSIC_TITLE',                   'musicTitle',                  'string' },
   { 'ALTERNATE_TITLE',               'alternateTitle',              'string' },
@@ -156,40 +156,38 @@ local metadataTags = {
   { 'MUSIC_CREDIT_COLOR',            'musicCreditColor',            'string' },
   { 'MUSIC_ARTIST',                  'musicArtist',                 'string' },
   { 'MUSIC_AUDIO',                   'musicAudio',                  'string' },
-  { 'DISABLE_MUSIC_PREVIEW',         'disableMusicPreview',         'bool',       default = false },
-  { 'MUSIC_PREVIEW_START',           'musicPreviewStart',           'float',      default = -1 },
-  { 'MUSIC_PREVIEW_LENGTH',          'musicPreviewLength',          'float',      default = 10 },
-  { 'MUSIC_VOLUME',                  'musicVolume',                 'float',      default = 1 },
-  { 'MUSIC_OFFSET',                  'musicOffset',                 'float',      default = 0 },
+  { 'DISABLE_MUSIC_PREVIEW',         'disableMusicPreview',         'bool',        default = false },
+  { 'MUSIC_PREVIEW_START',           'musicPreviewStart',           'float',       default = 0 },
+  { 'MUSIC_PREVIEW_LENGTH',          'musicPreviewLength',          'float',       default = 10 },
+  { 'MUSIC_VOLUME',                  'musicVolume',                 'float',       default = 1 },
+  { 'MUSIC_OFFSET',                  'musicOffset',                 'float',       default = 0 },
   { 'JACKET_IMAGE',                  'jacketImage',                 'string' },
   { 'JACKET_ILLUSTRATOR',            'jacketIllustrator',           'string' },
-  { 'JACKET_HEIGHT',                 'jacketHeight',                'float',      default = 0.345 },
-  { 'CHART_AUTHOR',                  'chartAuthor',                 'string',     replace = 'CHART_AUTHORS' },
-  { 'CHART_AUTHORS',                 'chartAuthors',                'stringArray' },
-  { 'MOD_AUTHOR',                    'modAuthor',                   'string',     replace = 'MOD_AUTHORS' },
-  { 'MOD_AUTHORS',                   'modAuthors',                  'stringArray' },
-  { 'CHART_BOSS',                    'chartBoss',                   'bool',       default = false },
-  { 'CHART_DIFFICULTY',              'chartDifficulty',             'difficulty', default = M.XDRVDifficulty.Normal },
-  { 'CHART_LEVEL',                   'chartLevel',                  'int',        default = 0 },
-  { 'CHART_LEVEL_STYLE',             'chartLevelStyle',             'string',     default = 'NORMAL' },
+  { 'JACKET_HEIGHT',                 'jacketHeight',                'float',       default = 0.345 },
+  { 'CHART_AUTHORS',                 'chartAuthors',                'stringArray', singular = 'CHART_AUTHOR' },
+  { 'MOD_AUTHORS',                   'modAuthors',                  'stringArray', singular = 'MOD_AUTHOR' },
+  { 'CHART_BOSS',                    'chartBoss',                   'bool',        default = false },
+  { 'CHART_DIFFICULTY',              'chartDifficulty',             'difficulty',  default = M.XDRVDifficulty.Normal },
+  { 'CHART_LEVEL',                   'chartLevel',                  'int',         default = 0 },
+  { 'CHART_LEVEL_STYLE',             'chartLevelStyle',             'string',      default = 'NORMAL' },
   { 'CHART_UNLOCK',                  'chartUnlock',                 'string' },
-  { 'CHART_DISPLAY_BPM',             'chartDisplayBPM',             'int',        default = 120 },
-  { 'CHART_BPM',                     'chartBPM',                    'float',      default = 120 },
-  { 'FLASH_TRACK',                   'isFlashTrack',                'bool',       default = false },
-  { 'KEYBOARD_ONLY',                 'isKeyboardOnly',              'bool',       default = false },
-  { 'ORIGINAL',                      'isOriginal',                  'bool',       default = false },
+  { 'CHART_DISPLAY_BPM',             'chartDisplayBPM',             'int',         default = 120 },
+  { 'CHART_BPM',                     'chartBPM',                    'float',       default = 120 },
+  { 'FLASH_TRACK',                   'isFlashTrack',                'bool',        default = false },
+  { 'KEYBOARD_ONLY',                 'isKeyboardOnly',              'bool',        default = false },
+  { 'ORIGINAL',                      'isOriginal',                  'bool',        default = false },
   { 'MODFILE_PATH',                  'modfilePath',                 'string' },
-  { 'RPC_HIDDEN',                    'rpcHidden',                   'bool',       default = true },
-  { 'DISABLE_LEADERBOARD_UPLOADING', 'disableLeaderboardUploading', 'bool',       default = true },
-  { 'STAGE_BACKGROUND',              'stageBackground',             'string',     default = 'BackgroundTunnel' },
+  { 'RPC_HIDDEN',                    'rpcHidden',                   'bool',        default = true },
+  { 'DISABLE_LEADERBOARD_UPLOADING', 'disableLeaderboardUploading', 'bool',        default = true },
+  { 'STAGE_BACKGROUND',              'stageBackground',             'string',      default = 'BackgroundTunnel' },
 }
 
 ---@type table<XDRVMetadataValueType, any>
 local defaultValues = {
   string = '',
   stringArray = {},
-  float = -1,
-  int = -1,
+  float = 0,
+  int = 0,
   bool = false,
   difficulty = M.XDRVDifficulty.Beginner,
 }
@@ -285,70 +283,67 @@ end
 
 M.formatDifficulty = metadataValueSerializers.difficulty
 
----@param t XDRVMetadata
+---@param metadata XDRVMetadata
 ---@return ({[1]: string, [2]: string})[]
-local function serializeMetadataValues(t)
+local function serializeMetadataValues(metadata)
   local data = {}
-  local populatedTags = {}
 
   for _, tag in ipairs(metadataTags) do
     local xdrv_name = tag[1]
+    local trmk_name = tag[2]
     local what = tag[3]
-    local f_value
-    if t[tag[2]] then
-      f_value = metadataValueSerializers[what](t[tag[2]])
-    else
-      f_value = metadataValueSerializers[what](tag.default or defaultValues[what])
-    end
 
-    if tag.replace then
-      if not populatedTags[tag.replace] then
-        xdrv_name = tag.replace
+    local v
+    if metadata[trmk_name] then
+      if tag.singular and #metadata[trmk_name] <= 1 then
+        xdrv_name = tag.singular
       end
+
+      v = metadataValueSerializers[what](metadata[trmk_name])
+    else
+      v = metadataValueSerializers[what](tag.default or defaultValues[what])
     end
 
-    if not populatedTags[xdrv_name] then
-      table.insert(data, { xdrv_name, f_value })
-      -- xdrv_name can never be nil.
-      ---@diagnostic disable-next-line: need-check-nil
-      populatedTags[xdrv_name] = true
-    end
+    table.insert(data, { xdrv_name, v })
   end
 
-  for tag, value in pairs(t._discardedTags) do
+  for tag, value in pairs(metadata._discardedTags) do
     table.insert(data, { tag, value })
   end
 
   return data
 end
 
----@param t table<string, string>
+---@param t {key: string, value: any}[]
 ---@return XDRVMetadata
 local function parseMetadataValues(t)
   local metadata = {}
   metadata._discardedTags = {}
-  local populatedTags = {}
 
-  for key, value in pairs(t) do
+  for _, line in ipairs(t) do
     local foundMatch = false
     for _, tag in ipairs(metadataTags) do
-      local what = tag[3]
-      if tag[1] == key and not populatedTags[tag.replace] then
-        print(tag[2], what, metadataValueParsers[what](value))
-        metadata[tag[2]] = metadataValueParsers[what](value)
+      local xdrv_name = tag[1]
+      local trmk_name = tag[2]
+      local type = tag[3]
+
+      if line.key == xdrv_name or line.key == tag.singular then
+        metadata[trmk_name] = metadataValueParsers[type](line.value)
         foundMatch = true
-        populatedTags[tag[2]] = true
         break
       end
     end
+
     if not foundMatch then
-      metadata._discardedTags[key] = value
+      metadata._discardedTags[line.key] = line.value
     end
   end
+
   for _, tag in ipairs(metadataTags) do
-    if not metadata[tag[2]] and not populatedTags[tag.replace] then
-      local what = tag[3]
-      metadata[tag[2]] = tag.default or defaultValues[what]
+    local trmk_name = tag[2]
+    if not metadata[trmk_name] then
+      local type = tag[3]
+      metadata[trmk_name] = tag.default or defaultValues[type]
     end
   end
 
@@ -888,7 +883,7 @@ local function deserializeMetadata(str)
         local key = string.sub(line, 1, eq - 1)
         local value = string.sub(line, eq + 1)
 
-        metadata[key] = value
+        table.insert(metadata, { key = key, value = value })
       end
     end
   end
