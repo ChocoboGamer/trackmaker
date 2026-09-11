@@ -66,35 +66,6 @@ end
 function MetadataWidget:getContainer()
   local metadata = chart.metadata or {}
 
-  local charterField = {}
-  if #metadata.chartAuthors > 0 then
-    charterField =
-    { Label(0, 0, 'Charters'), { Textfield(0, 0, 100, table.concat(metadata.chartAuthors, ', '), function(value)
-      chart.metadata.chartAuthors = splitStr(value)
-      chart.markDirty()
-    end), } }
-  else
-    charterField =
-    { Label(0, 0, 'Charter'), { Textfield(0, 0, 100, metadata.chartAuthor or '', function(value)
-      chart.metadata.chartAuthor = value
-      chart.markDirty()
-    end) } }
-  end
-  local modAuthorField = {}
-  if #metadata.modAuthors > 0 then
-    modAuthorField =
-    { Label(0, 0, 'Mod Authors'), { Textfield(0, 0, 100, table.concat(metadata.modAuthors, ', '), function(value)
-      chart.metadata.modAuthors = splitStr(value)
-      chart.markDirty()
-    end), } }
-  else
-    modAuthorField =
-    { Label(0, 0, 'Mod Author'), { Textfield(0, 0, 100, metadata.modAuthor or '', function(value)
-      chart.metadata.modAuthor = value
-      chart.markDirty()
-    end) } }
-  end
-
   local elems = Container.placeFormLike({
     { Label(0, 0, 'Title'), { Textfield(0, 0, 100, metadata.musicTitle or '', function(value)
       chart.metadata.musicTitle = value
@@ -108,7 +79,14 @@ function MetadataWidget:getContainer()
       chart.metadata.musicArtist = value
       chart.markDirty()
     end), } },
-    charterField, modAuthorField,
+    { Label(0, 0, 'Charter(s)'), { Textfield(0, 0, 100, table.concat(metadata.chartAuthors, ', '), function(value)
+      chart.metadata.chartAuthors = splitStr(value)
+      chart.markDirty()
+    end), } },
+    { Label(0, 0, 'Mod Author(s)'), { Textfield(0, 0, 100, table.concat(metadata.modAuthors, ', '), function(value)
+      chart.metadata.modAuthors = splitStr(value)
+      chart.markDirty()
+    end), } },
     { Label(0, 0, 'Music'), { Textfield(0, 0, 100, metadata.musicAudio or '', function(value)
       chart.metadata.musicAudio = value
       if chart.chartDir then
@@ -147,8 +125,8 @@ function MetadataWidget:getContainer()
         chart.metadata.musicPreviewStart = tonumber(value)
         chart.markDirty()
       end),
-      Label(0, 0, 'to'),
-      Textfield(0, 0, 100, (metadata.musicPreviewStart or 0) + (metadata.musicPreviewLength or 0), function(value)
+      Label(31, 0, 'to'),
+      Textfield(20, 0, 100, (metadata.musicPreviewStart or 0) + (metadata.musicPreviewLength or 0), function(value)
         chart.metadata.musicPreviewLength = tonumber(value) - chart.metadata.musicPreviewStart
         chart.markDirty()
       end),

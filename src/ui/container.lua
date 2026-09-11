@@ -122,7 +122,7 @@ function Container.placeFormLike(rows, width)
     local x = GAP
     for i, child in ipairs(row[2]) do
       local width = remainder / #row[2] - GAP
-      child.x = remainderX + x
+      child.x = remainderX + x + child.x
       child.y = y + Y_GAP / 2 - child.height / 2
       if not child:is(Checkmark) then
         child.width = width
