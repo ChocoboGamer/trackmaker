@@ -129,7 +129,8 @@ end
 
 function self.diffMark()
   return '[' ..
-  xdrv.formatDifficultyShort(self.metadata.chartDifficulty) .. lpad(tostring(self.metadata.chartLevel), 2, '0') .. ']'
+      xdrv.formatDifficultyShort(self.metadata.chartDifficulty) ..
+      lpad(tostring(self.metadata.chartLevel), 2, '0') .. ']'
 end
 
 function self.sort()
@@ -191,7 +192,7 @@ function self.tryLoadScript(filepath)
   -- VERY HACKY and AWFUL and etc etc
   if string.find(content, '%)%s*\n%s*%(') then
     logs.warn(
-    'Script uses ambiguous syntax (function call x new statement) supported by MoonScript but unsupported by LuaJIT.')
+      'Script uses ambiguous syntax (function call x new statement) supported by MoonScript but unsupported by LuaJIT.')
     logs.warn('I will try my best to transform the script into something functional.')
     logs.warn('The result will be logged to the console and log file')
 
@@ -213,7 +214,7 @@ function self.newChart()
 end
 
 function self.openPath(filepath)
-  local ext = string.match(filepath, '%.(.+)$')
+  local ext = string.match(filepath, '^.+%.([^\\/]+)$')
 
   if ext == 'xdrv' then
     local file, err = io.open(filepath, 'r')
@@ -261,7 +262,7 @@ function self.openData(loaded, filepath, anonymous)
   events.onChartLoad()
 
   logs.log('Loaded chart ' ..
-  (self.metadata.musicTitle or self.metadata.musicAudio or filepath) .. ' ' .. self.diffMark())
+    (self.metadata.musicTitle or self.metadata.musicAudio or filepath) .. ' ' .. self.diffMark())
   config.appendRecent(filepath)
   config.save()
 end
