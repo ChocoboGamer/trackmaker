@@ -229,7 +229,7 @@ function M.timeAtBeat(beat)
       local startBeatNextSegment = M.bpms[i + 1][1]
       local beatsThisSegment = math.min(startBeatNextSegment - startBeatThisSegment, beat)
       tempElapsed = tempElapsed +
-      M.beatsToSeconds(beatsThisSegment, bpm)                             -- count time based on how many beats we spent at each bpm
+          M.beatsToSeconds(beatsThisSegment, bpm) -- count time based on how many beats we spent at each bpm
       beat = beat - beatsThisSegment
     end
 
@@ -357,6 +357,8 @@ function M.update(dt)
     end
     lastT = M.time
 
+    local num_tick = 0
+
     for i, thing in ipairs(chart.chart) do
       if (thing.note or thing.gearShift) and thing.beat < M.beat and not chartStates[i].hit then
         chartStates[i].hit = true
@@ -365,7 +367,7 @@ function M.update(dt)
           onInputRelease(thing)
         end
         if config.config.noteTick then
-          noteTickSFX:play(0.75)
+          num_tick = num_tick + 1
         end
       end
       if ((thing.note and thing.note.length) or thing.gearShift) and not chartStates[i].hitEnd then
@@ -376,10 +378,15 @@ function M.update(dt)
           chartStates[i].hitEnd = true
           onInputRelease(thing)
           if thing.gearShift and config.config.noteTick then
-            noteTickSFX:play(0.75)
+            num_tick = num_tick + 1
           end
         end
       end
+    end
+
+    if num_tick > 0 then
+      print("playing tick with volume: ",num_tick)
+      noteTickSFX:play(1-0.3^num_tick)
     end
   end
   M.updateBeat()
